@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
+import co.develhope.StudioMedicoGruppo2Java8.entities.DoctorDTO;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +15,14 @@ public class DoctorController {
     DoctorRepository doctorRepository;
 
     @PostMapping("")
-    public Doctor createDoctor(@RequestBody Doctor doctor){
-        doctor.setDoctorId(null);
-        Doctor doctorSaved = doctorRepository.saveAndFlush(doctor);
-        return doctorSaved;
+    public DoctorDTO createDoctor(@RequestBody DoctorDTO doctorDTO){
+        doctorDTO.setDoctorId(null);
+        DoctorDTO doctorDTOSaved = doctorRepository.saveAndFlush(doctorDTO);
+        return doctorDTOSaved;
     }
 
     @GetMapping("")
-    public List<Doctor> getDoctors(){
+    public List<DoctorDTO> getDoctors(){
         return doctorRepository.findAll();
     }
 

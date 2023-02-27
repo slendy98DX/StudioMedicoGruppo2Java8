@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
+public class DoctorDTO {
 
     public enum DoctorSpecialization{
         CARDIOLOGO,
@@ -36,6 +36,5 @@ public class Doctor {
     private String officeContact;
     private String placeOfWork;
     private Integer workingDays;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MedicalOffice medicalOffice;
+
 }

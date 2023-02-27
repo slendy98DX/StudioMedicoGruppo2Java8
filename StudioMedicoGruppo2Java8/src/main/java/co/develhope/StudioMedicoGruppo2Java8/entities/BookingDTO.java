@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table
-public class Booking {
+public class BookingDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,11 +20,6 @@ public class Booking {
     private LocalDate creationDate;
     private LocalDate bookingDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Doctor doctor;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Patient patient;
-
-
+    @ManyToOne
+    private DoctorDTO doctorDTO;
 }

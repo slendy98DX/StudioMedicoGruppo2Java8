@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table
-public class Patient {
+public class PatientDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,5 +22,9 @@ public class Patient {
     private String patientPhoneNumber;
     private String taxIdCode;
 
+    @ManyToOne
+    private DoctorDTO doctorDTO;
 
+    @OneToOne
+    private BookingDTO bookingDTO;
 }

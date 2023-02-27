@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`secretary` (
   `secretaryEmail` VARCHAR(45) NULL,
   `phoneNumber` VARCHAR(45) NULL,
   `workingDays` INT NULL,
-  `secretarycol` VARCHAR(45) NULL,
   PRIMARY KEY (`idsecretary`),
   INDEX `fk_secretary_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
   UNIQUE INDEX `secretaryEmail_UNIQUE` (`secretaryEmail` ASC) VISIBLE,

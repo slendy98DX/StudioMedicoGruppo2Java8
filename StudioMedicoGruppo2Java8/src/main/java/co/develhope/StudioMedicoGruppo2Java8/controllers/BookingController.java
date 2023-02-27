@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.BookingDTO;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,33 +17,33 @@ public class BookingController {
     BookingRepository bookingRepository;
 
     @PostMapping("")
-    public Booking createBooking(@RequestBody Booking booking) {
-        booking.setBookingId(null);
-        Booking bookingSaved = bookingRepository.saveAndFlush(booking);
-        return bookingSaved;
+    public BookingDTO createBooking(@RequestBody BookingDTO bookingDTO) {
+        bookingDTO.setBookingId(null);
+        BookingDTO bookingDTOSaved = bookingRepository.saveAndFlush(bookingDTO);
+        return bookingDTOSaved;
     }
 
     @GetMapping("")
-    public List<Booking> getBookings(){
+    public List<BookingDTO> getBookings(){
         return bookingRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Booking> getSingleBooking(@PathVariable String id)throws Exception{
+    public Optional<BookingDTO> getSingleBooking(@PathVariable String id)throws Exception{
         if(bookingRepository.existsById(id)){
             return bookingRepository.findById(id);
         }else {
-            throw new Exception("Booking not found");
+            throw new Exception("BookingDTO not found");
         }
     }
 
     @PutMapping("/{id}")
-    public Booking editSingleBooking(@PathVariable String id, @RequestBody Booking booking)throws Exception{
+    public BookingDTO editSingleBooking(@PathVariable String id, @RequestBody BookingDTO bookingDTO)throws Exception{
         if(bookingRepository.existsById(id)){
-            booking.setBookingId(id);
-            return bookingRepository.saveAndFlush(booking);
+            bookingDTO.setBookingId(id);
+            return bookingRepository.saveAndFlush(bookingDTO);
         }else {
-            throw new Exception("Booking not found");
+            throw new Exception("BookingDTO not found");
         }
     }
 
