@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/studio_medico_progetto
     username: root
-    password: gneffgneff1M
+    password: qwerty12345678910#
   jpa:
     database: mysql
     show_sql: true

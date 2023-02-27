@@ -26,5 +26,4 @@ public class DoctorController {
         return doctorRepository.findAll();
     }
 
-
 }
