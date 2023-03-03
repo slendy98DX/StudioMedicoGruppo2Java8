@@ -14,9 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class SecretaryDTO {
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String secretaryId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long secretaryId;
     private String secretaryName;
     private String secretarySurname;
     @Column(unique = true)
@@ -25,6 +24,6 @@ public class SecretaryDTO {
     private String secretaryPhoneNumber;
     private Integer workingDays;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private DoctorDTO doctorDTO;
 }

@@ -16,12 +16,14 @@ import java.time.LocalDate;
 public class BookingDTO {
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String bookingId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long bookingId;
     private LocalDate creationDate;
     private LocalDate bookingDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private DoctorDTO doctorDTO;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private PatientDTO patientDTO;
 }

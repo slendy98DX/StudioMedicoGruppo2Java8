@@ -23,9 +23,8 @@ public class DoctorDTO {
     }
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String doctorId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long doctorId;
     private String doctorName;
     private String doctorSurname;
     @Enumerated(EnumType.STRING)

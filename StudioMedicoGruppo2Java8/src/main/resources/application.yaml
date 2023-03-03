@@ -16,5 +16,3 @@ springdoc:
       name: 'name'
       url: '/v3/api-docs'
 
-server:
-  port: 8080
