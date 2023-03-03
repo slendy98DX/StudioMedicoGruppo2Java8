@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class StudioDoctorGruppo2Java8ApplicationTests {
+class StudioDoctorGruppo2Java8ApplicationTestsDTO {
 
 	@Test
 	void contextLoads() {

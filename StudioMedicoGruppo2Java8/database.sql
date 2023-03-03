@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`secretary` (
   `secretaryEmail` VARCHAR(45) NULL,
   `phoneNumber` VARCHAR(45) NULL,
   `workingDays` INT NULL,
-  `secretarycol` VARCHAR(45) NULL,
   PRIMARY KEY (`idsecretary`),
   INDEX `fk_secretary_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
   UNIQUE INDEX `secretaryEmail_UNIQUE` (`secretaryEmail` ASC) VISIBLE,
@@ -65,16 +64,23 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`booking`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`booking` (
+CREATE TABLE IF NOT EXISTS `mydb`.`booking` (
   `idbooking` INT NOT NULL AUTO_INCREMENT,
   `doctor_iddoctor` INT NOT NULL,
   `bookingDate` DATE NULL,
   `status` TINYINT NULL,
+  `patient_healthInsuranceCard` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idbooking`),
   INDEX `fk_booking_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
+  INDEX `fk_booking_patient1_idx` (`patient_healthInsuranceCard` ASC) VISIBLE,
   CONSTRAINT `fk_booking_doctor1`
     FOREIGN KEY (`doctor_iddoctor`)
-    REFERENCES `studio_medico_progetto`.`doctor` (`iddoctor`)
+    REFERENCES `mydb`.`doctor` (`iddoctor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_booking_patient1`
+    FOREIGN KEY (`patient_healthInsuranceCard`)
+    REFERENCES `mydb`.`patient` (`healthInsuranceCard`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -83,27 +89,20 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`patient`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`patient` (
+CREATE TABLE IF NOT EXISTS `mydb`.`patient` (
   `healthInsuranceCard` VARCHAR(45) NOT NULL,
-  `booking_idbooking` INT NOT NULL,
   `doctor_iddoctor` INT NOT NULL,
   `patientName` VARCHAR(45) NULL,
   `patientSurname` VARCHAR(45) NULL,
   `patientEmail` VARCHAR(45) NULL,
   `phoneNumber` VARCHAR(45) NULL,
   PRIMARY KEY (`healthInsuranceCard`),
-  INDEX `fk_patient_booking1_idx` (`booking_idbooking` ASC) VISIBLE,
   INDEX `fk_patient_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
   UNIQUE INDEX `patientEmail_UNIQUE` (`patientEmail` ASC) VISIBLE,
   UNIQUE INDEX `phoneNumber_UNIQUE` (`phoneNumber` ASC) VISIBLE,
-  CONSTRAINT `fk_patient_booking1`
-    FOREIGN KEY (`booking_idbooking`)
-    REFERENCES `studio_medico_progetto`.`booking` (`idbooking`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_patient_doctor1`
     FOREIGN KEY (`doctor_iddoctor`)
-    REFERENCES `studio_medico_progetto`.`doctor` (`iddoctor`)
+    REFERENCES `mydb`.`doctor` (`iddoctor`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -11,12 +11,11 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @Entity
 @Table
-public class Patient {
+public class PatientDTO {
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String patientId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long patientId;
     private String patientName;
     private String patientSurname;
     @Column(unique = true)
@@ -24,5 +23,7 @@ public class Patient {
     private String patientPhoneNumber;
     private String taxIdCode;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DoctorDTO doctorDTO;
 
 }

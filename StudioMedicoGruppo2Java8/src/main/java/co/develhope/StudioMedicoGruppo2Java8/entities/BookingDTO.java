@@ -12,21 +12,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table
-public class Booking {
+@Table(name = "booking")
+public class BookingDTO {
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String bookingId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long bookingId;
     private LocalDate creationDate;
     private LocalDate bookingDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Doctor doctor;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private DoctorDTO doctorDTO;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Patient patient;
-
-
+    @OneToOne(fetch = FetchType.EAGER)
+    private PatientDTO patientDTO;
 }

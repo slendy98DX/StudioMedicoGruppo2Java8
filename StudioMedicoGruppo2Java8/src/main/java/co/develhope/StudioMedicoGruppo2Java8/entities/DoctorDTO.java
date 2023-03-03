@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Doctor {
+public class DoctorDTO {
 
     public enum DoctorSpecialization{
         CARDIOLOGO,
@@ -23,9 +23,8 @@ public class Doctor {
     }
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String doctorId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long doctorId;
     private String doctorName;
     private String doctorSurname;
     @Enumerated(EnumType.STRING)
@@ -36,6 +35,5 @@ public class Doctor {
     private String officeContact;
     private String placeOfWork;
     private Integer workingDays;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MedicalOffice medicalOffice;
+
 }
