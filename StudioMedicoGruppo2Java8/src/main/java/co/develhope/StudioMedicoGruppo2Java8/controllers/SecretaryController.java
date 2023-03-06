@@ -1,7 +1,7 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.BookingDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.SecretaryDTO;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,33 +22,33 @@ public class SecretaryController {
 
 
     @PostMapping("")
-    public SecretaryDTO createSecretary(@RequestBody SecretaryDTO secretaryDTO){
-        secretaryDTO.setSecretaryId(null);
-        SecretaryDTO secretaryDTOSaved = secretaryRepository.saveAndFlush(secretaryDTO);
-        return secretaryDTOSaved;
+    public Secretary createSecretary(@RequestBody Secretary secretary){
+        secretary.setSecretaryId(null);
+        Secretary secretarySaved = secretaryRepository.saveAndFlush(secretary);
+        return secretarySaved;
     }
 
     @GetMapping("")
-    public List<SecretaryDTO> getSecretary(){
+    public List<Secretary> getSecretary(){
         return secretaryRepository.findAll();
     }
 
 
 
     @PostMapping("/create-booking")
-    public BookingDTO createBooking(@RequestBody BookingDTO bookingDTO) {
-        bookingDTO.setBookingId(null);
-        BookingDTO bookingDTOSaved = bookingRepository.saveAndFlush(bookingDTO);
-        return bookingDTOSaved;
+    public Booking createBooking(@RequestBody Booking booking) {
+        booking.setBookingId(null);
+        Booking bookingSaved = bookingRepository.saveAndFlush(booking);
+        return bookingSaved;
     }
 
     @GetMapping("/get-booking-list")
-    public List<BookingDTO> getBookings(){
+    public List<Booking> getBookings(){
         return bookingRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<BookingDTO> getSingleBooking(@PathVariable Long id)throws Exception{
+    public Optional<Booking> getSingleBooking(@PathVariable Long id)throws Exception{
         if(bookingRepository.existsById(id)){
             return bookingRepository.findById(id);
         }else {
@@ -57,10 +57,10 @@ public class SecretaryController {
     }
 
     @PutMapping("/{id}")
-    public BookingDTO editSingleBooking(@PathVariable Long id, @RequestBody BookingDTO bookingDTO)throws Exception{
+    public Booking editSingleBooking(@PathVariable Long id, @RequestBody Booking booking)throws Exception{
         if(bookingRepository.existsById(id)){
-            bookingDTO.setBookingId(id);
-            return bookingRepository.saveAndFlush(bookingDTO);
+            booking.setBookingId(id);
+            return bookingRepository.saveAndFlush(booking);
         }else {
             throw new Exception("BookingDTO not found");
         }

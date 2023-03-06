@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 @Entity
 @Table(name = "booking")
-public class BookingDTO {
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,20 +13,20 @@ public class BookingDTO {
     private LocalDate bookingDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private DoctorDTO doctorDTO;
+    private Doctor doctor;
 
     @OneToOne(fetch = FetchType.EAGER)
-    private PatientDTO patientDTO;
+    private Patient patient;
 
-    public BookingDTO(Long bookingId, LocalDate creationDate, LocalDate bookingDate, DoctorDTO doctorDTO, PatientDTO patientDTO) {
+    public Booking(Long bookingId, LocalDate creationDate, LocalDate bookingDate, Doctor doctor, Patient patient) {
         this.bookingId = bookingId;
         this.creationDate = creationDate;
         this.bookingDate = bookingDate;
-        this.doctorDTO = doctorDTO;
-        this.patientDTO = patientDTO;
+        this.doctor = doctor;
+        this.patient = patient;
     }
 
-    public BookingDTO() {
+    public Booking() {
     }
 
     public Long getBookingId() {
@@ -53,19 +53,19 @@ public class BookingDTO {
         this.bookingDate = bookingDate;
     }
 
-    public DoctorDTO getDoctorDTO() {
-        return doctorDTO;
+    public Doctor getDoctorDTO() {
+        return doctor;
     }
 
-    public void setDoctorDTO(DoctorDTO doctorDTO) {
-        this.doctorDTO = doctorDTO;
+    public void setDoctorDTO(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-    public PatientDTO getPatientDTO() {
-        return patientDTO;
+    public Patient getPatientDTO() {
+        return patient;
     }
 
-    public void setPatientDTO(PatientDTO patientDTO) {
-        this.patientDTO = patientDTO;
+    public void setPatientDTO(Patient patient) {
+        this.patient = patient;
     }
 }
