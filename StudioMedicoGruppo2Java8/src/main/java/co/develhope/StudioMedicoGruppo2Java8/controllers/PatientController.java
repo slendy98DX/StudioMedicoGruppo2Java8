@@ -41,11 +41,12 @@ public class PatientController {
     }
     @GetMapping("/read-booking-patient/{id}")
     public Optional<BookingDTO> findByPatientId(@PathVariable Long id) throws Exception {
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
+        PatientDTO patientDTO = new PatientDTO();
+        if(patientRepository.existsById(id)){
+            patientDTO.setPatientId(id);
+            return bookingRepository.findByPatientDTO(patientDTO);
         }else {
             throw new Exception("Booking not found");
         }
-
     }
 }

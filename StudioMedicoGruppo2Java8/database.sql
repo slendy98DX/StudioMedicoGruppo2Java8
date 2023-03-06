@@ -21,88 +21,104 @@ CREATE SCHEMA IF NOT EXISTS `studio_medico_progetto` DEFAULT CHARACTER SET utf8 
 USE `studio_medico_progetto` ;
 
 -- -----------------------------------------------------
+-- Table `studio_medico_progetto`.`doctor_seq`
+-- -----------------------------------------------------
+
+CREATE TABLE `doctor_seq` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB
+
+-- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`doctor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`doctor` (
-  `iddoctor` INT NOT NULL AUTO_INCREMENT,
-  `doctorName` VARCHAR(45) NULL,
-  `doctorSurname` VARCHAR(45) NULL,
-  `doctorSpecializzation` VARCHAR(45) NULL,
-  `doctorEmail` VARCHAR(45) NULL,
-  `officeContact` VARCHAR(45) NULL,
-  `placeOfWork` VARCHAR(45) NULL,
-  `workingDays` INT NULL,
-  PRIMARY KEY (`iddoctor`),
-  UNIQUE INDEX `doctorEmail_UNIQUE` (`doctorEmail` ASC) VISIBLE,
-  UNIQUE INDEX `officeContact_UNIQUE` (`officeContact` ASC) VISIBLE)
+  `doctor_id` bigint NOT NULL,
+    `doctor_email` varchar(255) DEFAULT NULL,
+    `doctor_name` varchar(255) DEFAULT NULL,
+    `doctor_specialization` varchar(255) DEFAULT NULL,
+    `doctor_surname` varchar(255) DEFAULT NULL,
+    `office_contact` varchar(255) DEFAULT NULL,
+    `place_of_work` varchar(255) DEFAULT NULL,
+    `working_days` int DEFAULT NULL,
+    PRIMARY KEY (`doctor_id`),
+    UNIQUE KEY `UK_lr3j4y6twpk17qwuydiqi3yuh` (`doctor_email`)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `studio_medico_progetto`.`secretary_seq`
+-- -----------------------------------------------------
+CREATE TABLE `secretary_seq` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB
 
 
 -- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`secretary`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`secretary` (
-  `idsecretary` INT NOT NULL AUTO_INCREMENT,
-  `doctor_iddoctor` INT NOT NULL,
-  `secretaryName` VARCHAR(45) NULL,
-  `secretarySurname` VARCHAR(45) NULL,
-  `secretaryEmail` VARCHAR(45) NULL,
-  `phoneNumber` VARCHAR(45) NULL,
-  `workingDays` INT NULL,
-  PRIMARY KEY (`idsecretary`),
-  INDEX `fk_secretary_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
-  UNIQUE INDEX `secretaryEmail_UNIQUE` (`secretaryEmail` ASC) VISIBLE,
-  UNIQUE INDEX `phoneNumber_UNIQUE` (`phoneNumber` ASC) VISIBLE,
-  CONSTRAINT `fk_secretary_doctor1`
-    FOREIGN KEY (`doctor_iddoctor`)
-    REFERENCES `studio_medico_progetto`.`doctor` (`iddoctor`)
+  `secretary_id` bigint NOT NULL,
+    `secretary_email` varchar(255) DEFAULT NULL,
+    `secretary_name` varchar(255) DEFAULT NULL,
+    `secretary_phone_number` varchar(255) DEFAULT NULL,
+    `secretary_surname` varchar(255) DEFAULT NULL,
+    `working_days` int DEFAULT NULL,
+    `doctordto_doctor_id` bigint DEFAULT NULL,
+    PRIMARY KEY (`secretary_id`),
+    UNIQUE KEY `UK_69d2psqyk1vaiumpg9r14oq5l` (`secretary_email`),
+    UNIQUE KEY `UK_g15r0hqrch018pf3717rhoxij` (`secretary_phone_number`),
+    KEY `FKi60cdg57v63gh3l9j7iamyfu4` (`doctordto_doctor_id`),
+    CONSTRAINT `FKi60cdg57v63gh3l9j7iamyfu4` FOREIGN KEY (`doctordto_doctor_id`) REFERENCES `doctor` (`doctor_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `studio_medico_progetto`.`booking_seq`
+-- -----------------------------------------------------
+CREATE TABLE `booking_seq` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB
 
 -- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`booking`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`booking` (
-  `idbooking` INT NOT NULL AUTO_INCREMENT,
-  `doctor_iddoctor` INT NOT NULL,
-  `bookingDate` DATE NULL,
-  `status` TINYINT NULL,
-  `patient_healthInsuranceCard` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idbooking`),
-  INDEX `fk_booking_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
-  INDEX `fk_booking_patient1_idx` (`patient_healthInsuranceCard` ASC) VISIBLE,
-  CONSTRAINT `fk_booking_doctor1`
-    FOREIGN KEY (`doctor_iddoctor`)
-    REFERENCES `mydb`.`doctor` (`iddoctor`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_booking_patient1`
-    FOREIGN KEY (`patient_healthInsuranceCard`)
-    REFERENCES `mydb`.`patient` (`healthInsuranceCard`)
+CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`booking` (
+      `booking_id` bigint NOT NULL,
+      `booking_date` date DEFAULT NULL,
+      `creation_date` date DEFAULT NULL,
+      `doctordto_doctor_id` bigint DEFAULT NULL,
+      `patientdto_patient_id` bigint DEFAULT NULL,
+      PRIMARY KEY (`booking_id`),
+      KEY `FKj0iyrhiy7yylocnmm91o3xrcb` (`doctordto_doctor_id`),
+      KEY `FK8l4pqpgwa2s9c6r08ptfrk967` (`patientdto_patient_id`),
+      CONSTRAINT `FK8l4pqpgwa2s9c6r08ptfrk967` FOREIGN KEY (`patientdto_patient_id`) REFERENCES `patient` (`patient_id`),
+      CONSTRAINT `FKj0iyrhiy7yylocnmm91o3xrcb` FOREIGN KEY (`doctordto_doctor_id`) REFERENCES `doctor` (`doctor_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `studio_medico_progetto`.`patient_seq`
+-- -----------------------------------------------------
+CREATE TABLE `patient_seq` (
+  `next_val` bigint DEFAULT NULL
+) ENGINE=InnoDB
 
 -- -----------------------------------------------------
 -- Table `studio_medico_progetto`.`patient`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`patient` (
-  `healthInsuranceCard` VARCHAR(45) NOT NULL,
-  `doctor_iddoctor` INT NOT NULL,
-  `patientName` VARCHAR(45) NULL,
-  `patientSurname` VARCHAR(45) NULL,
-  `patientEmail` VARCHAR(45) NULL,
-  `phoneNumber` VARCHAR(45) NULL,
-  PRIMARY KEY (`healthInsuranceCard`),
-  INDEX `fk_patient_doctor1_idx` (`doctor_iddoctor` ASC) VISIBLE,
-  UNIQUE INDEX `patientEmail_UNIQUE` (`patientEmail` ASC) VISIBLE,
-  UNIQUE INDEX `phoneNumber_UNIQUE` (`phoneNumber` ASC) VISIBLE,
-  CONSTRAINT `fk_patient_doctor1`
-    FOREIGN KEY (`doctor_iddoctor`)
-    REFERENCES `mydb`.`doctor` (`iddoctor`)
+CREATE TABLE IF NOT EXISTS `studio_medico_progetto`.`patient` (
+    `patient_id` bigint NOT NULL,
+      `patient_email` varchar(255) DEFAULT NULL,
+      `patient_name` varchar(255) DEFAULT NULL,
+      `patient_phone_number` varchar(255) DEFAULT NULL,
+      `patient_surname` varchar(255) DEFAULT NULL,
+      `tax_id_code` varchar(255) DEFAULT NULL,
+      `doctordto_doctor_id` bigint DEFAULT NULL,
+      PRIMARY KEY (`patient_id`),
+      UNIQUE KEY `UK_3rjgubfrjwmr1johx59i16s2g` (`patient_email`),
+      KEY `FKr0uudx4knhddxs32u3sykj3re` (`doctordto_doctor_id`),
+      CONSTRAINT `FKr0uudx4knhddxs32u3sykj3re` FOREIGN KEY (`doctordto_doctor_id`) REFERENCES `doctor` (`doctor_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

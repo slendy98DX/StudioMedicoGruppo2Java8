@@ -19,14 +19,14 @@ public class DoctorController {
     @Autowired
     BookingRepository bookingRepository;
 
-    @PostMapping("/")
+    @PostMapping("")
     public DoctorDTO createDoctor(@RequestBody DoctorDTO doctorDTO){
         doctorDTO.setDoctorId(null);
         DoctorDTO doctorDTOSaved = doctorRepository.saveAndFlush(doctorDTO);
         return doctorDTOSaved;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<DoctorDTO> getDoctors(){
         return doctorRepository.findAll();
     }
