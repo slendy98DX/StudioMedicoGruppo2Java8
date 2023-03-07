@@ -15,32 +15,20 @@ public class Doctor extends Person{
         PEDIATRA
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long doctorId;
     @Enumerated(EnumType.STRING)
     @Column(name = "doctorSpecialization")
     private DoctorSpecialization doctorSpecialization;
     private String placeOfWork;
     private Integer workingDays;
 
-    public Doctor(String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Long doctorId, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
-        super(name, surname, email, phoneNumber, recordStatus);
-        this.doctorId = doctorId;
+    public Doctor(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
+        super(id, name, surname, email, phoneNumber, recordStatus);
         this.doctorSpecialization = doctorSpecialization;
         this.placeOfWork = placeOfWork;
         this.workingDays = workingDays;
     }
 
     public Doctor() {
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
     }
 
     public DoctorSpecialization getDoctorSpecialization() {

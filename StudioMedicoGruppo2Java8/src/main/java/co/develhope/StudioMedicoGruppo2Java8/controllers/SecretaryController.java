@@ -23,7 +23,7 @@ public class SecretaryController {
 
     @PostMapping("")
     public Secretary createSecretary(@RequestBody Secretary secretary){
-        secretary.setSecretaryId(null);
+        secretary.setId(null);
         Secretary secretarySaved = secretaryRepository.saveAndFlush(secretary);
         return secretarySaved;
     }

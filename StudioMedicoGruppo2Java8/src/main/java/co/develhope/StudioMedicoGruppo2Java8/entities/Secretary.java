@@ -6,31 +6,18 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "secretary")
 public class Secretary extends Person{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long secretaryId;
     private Integer workingDays;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Doctor doctor;
 
-    public Secretary(String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Long secretaryId, Integer workingDays, Doctor doctor) {
-        super(name, surname, email, phoneNumber, recordStatus);
-        this.secretaryId = secretaryId;
+    public Secretary(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Integer workingDays, Doctor doctor) {
+        super(id, name, surname, email, phoneNumber, recordStatus);
         this.workingDays = workingDays;
         this.doctor = doctor;
     }
 
     public Secretary() {
-    }
-
-    public Long getSecretaryId() {
-        return secretaryId;
-    }
-
-    public void setSecretaryId(Long secretaryId) {
-        this.secretaryId = secretaryId;
     }
 
     public Integer getWorkingDays() {

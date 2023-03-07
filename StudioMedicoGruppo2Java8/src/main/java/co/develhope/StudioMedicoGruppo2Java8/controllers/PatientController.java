@@ -21,7 +21,7 @@ public class PatientController {
 
     @PostMapping("")
     public Patient createPatient(@RequestBody Patient patient){
-        patient.setPatientId(null);
+        patient.setId(null);
         Patient patientSaved = patientRepository.saveAndFlush(patient);
         return patientSaved;
     }
@@ -41,7 +41,7 @@ public class PatientController {
     public Optional<Booking> findByPatientId(@PathVariable Long id) throws Exception {
         Patient patient = new Patient();
         if(patientRepository.existsById(id)){
-            patient.setPatientId(id);
+            patient.setId(id);
             return bookingRepository.findByPatient(patient);
         }else {
             throw new Exception("Booking not found");

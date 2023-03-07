@@ -21,7 +21,7 @@ public class DoctorController {
 
     @PostMapping("")
     public Doctor createDoctor(@RequestBody Doctor doctor){
-        doctor.setDoctorId(null);
+        doctor.setId(null);
         Doctor doctorSaved = doctorRepository.saveAndFlush(doctor);
         return doctorSaved;
     }
