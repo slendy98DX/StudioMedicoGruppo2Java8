@@ -2,10 +2,8 @@ package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
+import co.develhope.StudioMedicoGruppo2Java8.services.SecretaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,69 +14,40 @@ import java.util.Optional;
 public class SecretaryController {
 
     @Autowired
-    SecretaryRepository secretaryRepository;
-    @Autowired
-    BookingRepository bookingRepository;
+    private SecretaryService secretaryService;
 
 
     @PostMapping("")
     public Secretary createSecretary(@RequestBody Secretary secretary){
-        secretary.setId(null);
-        Secretary secretarySaved = secretaryRepository.saveAndFlush(secretary);
-        return secretarySaved;
+        return secretaryService.createSecretary(secretary);
     }
-
     @GetMapping("")
-    public List<Secretary> getSecretary(){
-        return secretaryRepository.findAll();
+    public List<Secretary> getAllSecretaries(){
+        return secretaryService.getAllSecretaries();
     }
-
-
-
     @PostMapping("/create-booking")
-    public Booking createBooking(@RequestBody Booking booking) {
-        booking.setBookingId(null);
-        Booking bookingSaved = bookingRepository.saveAndFlush(booking);
-        return bookingSaved;
+    public Booking createBooking(@RequestBody Booking booking){
+        return secretaryService.createBooking(booking);
     }
-
-    @GetMapping("/get-booking-list")
-    public List<Booking> getBookings(){
-        return bookingRepository.findAll();
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings() {
+        return secretaryService.getBookings();
     }
-
-    @GetMapping("/{id}")
-    public Optional<Booking> getSingleBooking(@PathVariable Long id)throws Exception{
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    @GetMapping("/getSingleBooking")
+    public Optional<Booking> getSingleBooking(Long id) throws Exception {
+        return secretaryService.getSingleBooking(id);
     }
-
-    @PutMapping("/{id}")
-    public Booking editSingleBooking(@PathVariable Long id, @RequestBody Booking booking)throws Exception{
-        if(bookingRepository.existsById(id)){
-            booking.setBookingId(id);
-            return bookingRepository.saveAndFlush(booking);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    @PutMapping("/updateSingleBooking")
+    public Booking updateSingleBooking(Long id) throws Exception {
+        return secretaryService.editSingleBooking(id);
     }
-
-    @DeleteMapping("/{id}")
-    public HttpStatus deleteSingleBooking(@PathVariable Long id){
-        if (bookingRepository.existsById(id)){
-            bookingRepository.deleteById(id);
-            return HttpStatus.ACCEPTED;
-        }else {
-            return HttpStatus.CONFLICT;
-        }
+    @DeleteMapping("/deleteBooking")
+    public void deleteBooking(Long id){
+        secretaryService.deleteSingleBooking(id);
     }
-
-    @DeleteMapping("")
+    @DeleteMapping("/deleteAllBooking")
     public void deleteAllBooking(){
-        bookingRepository.deleteAll();
+        secretaryService.deleteAllBooking();
     }
 }
 

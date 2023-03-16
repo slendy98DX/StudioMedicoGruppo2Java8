@@ -2,8 +2,7 @@ package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
+import co.develhope.StudioMedicoGruppo2Java8.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,36 +14,31 @@ import java.util.Optional;
 public class PatientController {
 
     @Autowired
-    PatientRepository patientRepository;
-    @Autowired
-    BookingRepository bookingRepository;
-
+    PatientService patientService;
+    
     @PostMapping("")
-    public Patient createPatient(@RequestBody Patient patient){
-        patient.setId(null);
-        Patient patientSaved = patientRepository.saveAndFlush(patient);
-        return patientSaved;
+    public Patient createPatient(Patient patient){
+        return patientService.createPatient(patient);
     }
 
     @GetMapping("")
     public List<Patient> getPatients(){
-        return patientRepository.findAll();
+        return patientService.getPatients();
     }
-
-    @PostMapping("/create-booking-patient")
-    public Booking createBooking(@RequestBody Booking booking) {
-        booking.setBookingId(null);
-        Booking bookingSaved = bookingRepository.saveAndFlush(booking);
-        return bookingSaved;
+    @GetMapping("/getAllBooking")
+    public List<Booking> getAllBooking() {
+        return patientService.getAllBooking();
     }
-    @GetMapping("/read-booking-patient/{id}")
-    public Optional<Booking> findByPatientId(@PathVariable Long id) throws Exception {
-        Patient patient = new Patient();
-        if(patientRepository.existsById(id)){
-            patient.setId(id);
-            return bookingRepository.findByPatient(patient);
-        }else {
-            throw new Exception("Booking not found");
-        }
+    @PostMapping("/createBooking")
+    public Booking createBooking(Booking booking) {
+        return patientService.createBooking(booking);
+    }
+    @GetMapping("/getSingleBooking")
+    public Optional<Booking> getSingleBooking(Long id) throws Exception {
+        return patientService.getSingleBooking(id);
+    }
+    @DeleteMapping("/deleteBooking")
+    public void deleteSingleBooking(Long id){
+        patientService.deleteSingleBooking(id);
     }
 }

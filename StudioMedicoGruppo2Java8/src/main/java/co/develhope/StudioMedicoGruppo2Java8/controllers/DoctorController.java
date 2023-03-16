@@ -4,6 +4,7 @@ import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
+import co.develhope.StudioMedicoGruppo2Java8.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,33 +16,23 @@ import java.util.Optional;
 public class DoctorController {
 
     @Autowired
-    DoctorRepository doctorRepository;
-    @Autowired
-    BookingRepository bookingRepository;
+    private DoctorService doctorService;
 
     @PostMapping("")
     public Doctor createDoctor(@RequestBody Doctor doctor){
-        doctor.setId(null);
-        Doctor doctorSaved = doctorRepository.saveAndFlush(doctor);
-        return doctorSaved;
+        return doctorService.createDoctor(doctor);
     }
-
     @GetMapping("")
     public List<Doctor> getDoctors(){
-        return doctorRepository.findAll();
+        return doctorService.getDoctors();
     }
 
     @GetMapping("/{id}")
     public Optional<Booking> getSingleBooking(@PathVariable Long id)throws Exception{
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+       return doctorService.getSingleBooking(id);
     }
-    @GetMapping("/doctor-get-booking-list")
-    public List<Booking> getBookings(){
-        return bookingRepository.findAll();
+    @GetMapping("/getBookings")
+    public List<Booking> getBookings() {
+        return doctorService.getBookings();
     }
-
 }
