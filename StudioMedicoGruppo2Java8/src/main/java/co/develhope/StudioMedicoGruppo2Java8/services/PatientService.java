@@ -30,32 +30,21 @@ public class PatientService {
         Patient patientSaved = patientRepository.saveAndFlush(patient);
         return patientSaved;
     }
-
-
     public List<Patient> getPatients(){
         return patientRepository.findAll();
     }
 
-    public List<Booking> getAllBooking() {
-        Patient patient = new Patient();
-        return bookingRepository.findAllByPatient(patient);
+    public List<Booking> getAllBooking(Long id) {
+        return bookingRepository.findAllByPatientId(id);
     }
     public Booking createBooking(Booking booking) {
         booking.setBookingId(null);
         Booking bookingSaved = bookingRepository.save(booking);
         return bookingSaved;
     }
-    public Optional<Booking> getSingleBooking(Long id) throws Exception {
-        Patient patient = new Patient();
-        if(patientRepository.existsById(id)){
-            return bookingRepository.findByPatient(patient);
-        }else {
-            throw new Exception("Booking not found");
-        }
-    }
-    public void deleteSingleBooking(Long id){
+    /*public void deleteSingleBooking(Long id){
         Booking booking = new Booking();
         booking.setBookingId(id);
         booking.setRecordStatus(RecordStatus.DELETED);
-    }
+    }*/
 }

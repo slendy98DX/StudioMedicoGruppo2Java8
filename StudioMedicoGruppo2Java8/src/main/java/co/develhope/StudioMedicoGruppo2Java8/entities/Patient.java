@@ -9,7 +9,7 @@ public class Patient extends Person{
     @Column(unique = true)
     private String taxIdCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
     public Patient(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String taxIdCode, Doctor doctor) {

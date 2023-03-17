@@ -17,7 +17,7 @@ public class PatientController {
     PatientService patientService;
     
     @PostMapping("")
-    public Patient createPatient(Patient patient){
+    public Patient createPatient(@RequestBody Patient patient){
         return patientService.createPatient(patient);
     }
 
@@ -26,19 +26,11 @@ public class PatientController {
         return patientService.getPatients();
     }
     @GetMapping("/getAllBooking")
-    public List<Booking> getAllBooking() {
-        return patientService.getAllBooking();
+    public List<Booking> getAllBooking(@RequestParam Long id) {
+        return patientService.getAllBooking(id);
     }
     @PostMapping("/createBooking")
-    public Booking createBooking(Booking booking) {
+    public Booking createBooking(@RequestBody Booking booking) {
         return patientService.createBooking(booking);
-    }
-    @GetMapping("/getSingleBooking")
-    public Optional<Booking> getSingleBooking(Long id) throws Exception {
-        return patientService.getSingleBooking(id);
-    }
-    @DeleteMapping("/deleteBooking")
-    public void deleteSingleBooking(Long id){
-        patientService.deleteSingleBooking(id);
     }
 }

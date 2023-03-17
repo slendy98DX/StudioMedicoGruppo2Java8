@@ -4,9 +4,11 @@ import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
 import co.develhope.StudioMedicoGruppo2Java8.services.SecretaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -34,16 +36,16 @@ public class SecretaryController {
         return secretaryService.getBookings();
     }
     @GetMapping("/getSingleBooking")
-    public Optional<Booking> getSingleBooking(Long id) throws Exception {
+    public Optional<Booking> getSingleBooking(@RequestParam Long id) throws Exception {
         return secretaryService.getSingleBooking(id);
     }
     @PutMapping("/updateSingleBooking")
-    public Booking updateSingleBooking(Long id) throws Exception {
+    public Booking updateSingleBooking(@RequestParam Long id) throws Exception {
         return secretaryService.editSingleBooking(id);
     }
-    @DeleteMapping("/deleteBooking")
-    public void deleteBooking(Long id){
-        secretaryService.deleteSingleBooking(id);
+    @DeleteMapping("/deleteBooking/{id}")
+    public void deleteBooking(@PathVariable Long id, Map<Object,Object> fields){
+        secretaryService.deleteSingleBooking(id, fields);
     }
     @DeleteMapping("/deleteAllBooking")
     public void deleteAllBooking(){

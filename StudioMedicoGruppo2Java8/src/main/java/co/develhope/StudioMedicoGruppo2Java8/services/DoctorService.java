@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,17 +36,11 @@ public class DoctorService {
     }
 
 
-    public Optional<Booking> getSingleBooking(Long id)throws Exception{
-        Doctor doctor = new Doctor();
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findByDoctor(doctor);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    public List<Booking> getAllBookingByDate(LocalDate localDate, Long id) {
+        return bookingRepository.findAllByBookingDateAndDoctorId(localDate, id);
     }
 
-    public List<Booking> getBookings() {
-        Doctor doctor = new Doctor();
-        return bookingRepository.findAllByDoctor(doctor);
+    public List<Booking> getBookings(Long id) {
+        return bookingRepository.findAllByDoctorId(id);
     }
 }

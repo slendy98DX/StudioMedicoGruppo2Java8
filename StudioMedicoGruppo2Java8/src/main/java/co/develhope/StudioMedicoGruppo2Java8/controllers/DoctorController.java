@@ -8,6 +8,7 @@ import co.develhope.StudioMedicoGruppo2Java8.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,12 @@ public class DoctorController {
         return doctorService.getDoctors();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Booking> getSingleBooking(@PathVariable Long id)throws Exception{
-       return doctorService.getSingleBooking(id);
+    @GetMapping("/getBookingDate")
+    public List<Booking> getSingleBooking(@RequestParam LocalDate localDate, @RequestParam Long id){
+       return doctorService.getAllBookingByDate(localDate, id);
     }
     @GetMapping("/getBookings")
-    public List<Booking> getBookings() {
-        return doctorService.getBookings();
+    public List<Booking> getBookings(@RequestParam Long id) {
+        return doctorService.getBookings(id);
     }
 }
