@@ -1,14 +1,13 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.BookingDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.SecretaryDTO;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
+import co.develhope.StudioMedicoGruppo2Java8.services.SecretaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -16,69 +15,40 @@ import java.util.Optional;
 public class SecretaryController {
 
     @Autowired
-    SecretaryRepository secretaryRepository;
-    @Autowired
-    BookingRepository bookingRepository;
+    private SecretaryService secretaryService;
 
 
     @PostMapping("")
-    public SecretaryDTO createSecretary(@RequestBody SecretaryDTO secretaryDTO){
-        secretaryDTO.setSecretaryId(null);
-        SecretaryDTO secretaryDTOSaved = secretaryRepository.saveAndFlush(secretaryDTO);
-        return secretaryDTOSaved;
+    public Secretary createSecretary(@RequestBody Secretary secretary){
+        return secretaryService.createSecretary(secretary);
     }
-
     @GetMapping("")
-    public List<SecretaryDTO> getSecretary(){
-        return secretaryRepository.findAll();
+    public List<Secretary> getAllSecretaries(){
+        return secretaryService.getAllSecretaries();
     }
-
-
-
     @PostMapping("/create-booking")
-    public BookingDTO createBooking(@RequestBody BookingDTO bookingDTO) {
-        bookingDTO.setBookingId(null);
-        BookingDTO bookingDTOSaved = bookingRepository.saveAndFlush(bookingDTO);
-        return bookingDTOSaved;
+    public Booking createBooking(@RequestBody Booking booking){
+        return secretaryService.createBooking(booking);
     }
-
-    @GetMapping("/get-booking-list")
-    public List<BookingDTO> getBookings(){
-        return bookingRepository.findAll();
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings() {
+        return secretaryService.getBookings();
     }
-
-    @GetMapping("/{id}")
-    public Optional<BookingDTO> getSingleBooking(@PathVariable Long id)throws Exception{
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    @GetMapping("/getSingleBooking")
+    public Optional<Booking> getSingleBooking(@RequestParam Long id) throws Exception {
+        return secretaryService.getSingleBooking(id);
     }
-
-    @PutMapping("/{id}")
-    public BookingDTO editSingleBooking(@PathVariable Long id, @RequestBody BookingDTO bookingDTO)throws Exception{
-        if(bookingRepository.existsById(id)){
-            bookingDTO.setBookingId(id);
-            return bookingRepository.saveAndFlush(bookingDTO);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    @PutMapping("/updateSingleBooking")
+    public Booking updateSingleBooking(@RequestParam Long id) throws Exception {
+        return secretaryService.editSingleBooking(id);
     }
-
-    @DeleteMapping("/{id}")
-    public HttpStatus deleteSingleBooking(@PathVariable Long id){
-        if (bookingRepository.existsById(id)){
-            bookingRepository.deleteById(id);
-            return HttpStatus.ACCEPTED;
-        }else {
-            return HttpStatus.CONFLICT;
-        }
+    @DeleteMapping("/deleteBooking/{id}")
+    public void deleteBooking(@PathVariable Long id, Map<Object,Object> fields){
+        secretaryService.deleteSingleBooking(id, fields);
     }
-
-    @DeleteMapping("")
+    @DeleteMapping("/deleteAllBooking")
     public void deleteAllBooking(){
-        bookingRepository.deleteAll();
+        secretaryService.deleteAllBooking();
     }
 }
 

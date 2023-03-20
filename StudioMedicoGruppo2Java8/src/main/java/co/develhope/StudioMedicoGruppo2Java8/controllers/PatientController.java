@@ -1,52 +1,35 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.BookingDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.PatientDTO;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
+import co.develhope.StudioMedicoGruppo2Java8.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
 
     @Autowired
-    PatientRepository patientRepository;
-    @Autowired
-    BookingRepository bookingRepository;
-
+    PatientService patientService;
+    
     @PostMapping("")
-    public PatientDTO createPatient(@RequestBody PatientDTO patientDTO){
-        patientDTO.setPatientId(null);
-        PatientDTO patientDTOSaved = patientRepository.saveAndFlush(patientDTO);
-        return patientDTOSaved;
+    public Patient createPatient(@RequestBody Patient patient){
+        return patientService.createPatient(patient);
     }
 
     @GetMapping("")
-    public List<PatientDTO> getPatients(){
-        return patientRepository.findAll();
+    public List<Patient> getPatients(){
+        return patientService.getPatients();
     }
-
-    @PostMapping("/create-booking-patient")
-    public BookingDTO createBooking(@RequestBody BookingDTO bookingDTO) {
-        bookingDTO.setBookingId(null);
-        BookingDTO bookingDTOSaved = bookingRepository.saveAndFlush(bookingDTO);
-        return bookingDTOSaved;
+    @GetMapping("/getAllBooking")
+    public List<Booking> getAllBooking(@RequestParam Long id) {
+        return patientService.getAllBooking(id);
     }
-    @GetMapping("/read-booking-patient/{id}")
-    public Optional<BookingDTO> findByPatientId(@PathVariable Long id) throws Exception {
-        PatientDTO patientDTO = new PatientDTO();
-        if(patientRepository.existsById(id)){
-            patientDTO.setPatientId(id);
-            return bookingRepository.findByPatientDTO(patientDTO);
-        }else {
-            throw new Exception("Booking not found");
-        }
+    @PostMapping("/createBooking")
+    public Booking createBooking(@RequestBody Booking booking) {
+        return patientService.createBooking(booking);
     }
 }

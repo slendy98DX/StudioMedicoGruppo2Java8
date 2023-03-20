@@ -1,47 +1,36 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.BookingDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.DoctorDTO;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
+import co.develhope.StudioMedicoGruppo2Java8.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
 
     @Autowired
-    DoctorRepository doctorRepository;
-    @Autowired
-    BookingRepository bookingRepository;
+    private DoctorService doctorService;
 
     @PostMapping("")
-    public DoctorDTO createDoctor(@RequestBody DoctorDTO doctorDTO){
-        doctorDTO.setDoctorId(null);
-        DoctorDTO doctorDTOSaved = doctorRepository.saveAndFlush(doctorDTO);
-        return doctorDTOSaved;
+    public Doctor createDoctor(@RequestBody Doctor doctor){
+        return doctorService.createDoctor(doctor);
     }
-
     @GetMapping("")
-    public List<DoctorDTO> getDoctors(){
-        return doctorRepository.findAll();
+    public List<Doctor> getDoctors(){
+        return doctorService.getDoctors();
     }
 
-    @GetMapping("/{id}")
-    public Optional<BookingDTO> getSingleBooking(@PathVariable Long id)throws Exception{
-        if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
-        }else {
-            throw new Exception("BookingDTO not found");
-        }
+    @GetMapping("/getBookingDate")
+    public List<Booking> getSingleBooking(@RequestParam LocalDate localDate, @RequestParam Long id){
+       return doctorService.getAllBookingByDate(localDate, id);
     }
-    @GetMapping("/doctor-get-booking-list")
-    public List<BookingDTO> getBookings(){
-        return bookingRepository.findAll();
+    @GetMapping("/getBookings")
+    public List<Booking> getBookings(@RequestParam Long id) {
+        return doctorService.getBookings(id);
     }
-
 }
