@@ -3,16 +3,18 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "secretary")
 public class Secretary extends Person{
     private Integer workingDays;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    public Secretary(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Integer workingDays, Doctor doctor) {
-        super(id, name, surname, email, phoneNumber, recordStatus);
+    public Secretary(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Date createdOn, Date modifiedOn, Integer workingDays, Doctor doctor) {
+        super(id, name, surname, email, phoneNumber, recordStatus, createdOn, modifiedOn);
         this.workingDays = workingDays;
         this.doctor = doctor;
     }

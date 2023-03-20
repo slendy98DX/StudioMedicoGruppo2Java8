@@ -2,7 +2,14 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDate;
+import java.util.Date;
+
+import static jakarta.persistence.TemporalType.TIMESTAMP;
+
 @Entity
 @Table(name = "booking")
 public class Booking {
@@ -10,7 +17,12 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bookingId;
-    private LocalDate creationDate;
+    @CreatedDate
+    @Temporal(TIMESTAMP)
+    private Date createdOn;
+    @LastModifiedDate
+    @Temporal(TIMESTAMP)
+    private Date modifiedOn;
     private LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
@@ -22,9 +34,11 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)
     private Patient patient;
 
-    public Booking(Long bookingId, LocalDate creationDate, LocalDate bookingDate, RecordStatus recordStatus, Doctor doctor, Patient patient) {
+
+    public Booking(Long bookingId, Date createdOn, Date modifiedOn, LocalDate bookingDate, RecordStatus recordStatus, Doctor doctor, Patient patient) {
         this.bookingId = bookingId;
-        this.creationDate = creationDate;
+        this.createdOn = createdOn;
+        this.modifiedOn = modifiedOn;
         this.bookingDate = bookingDate;
         this.recordStatus = recordStatus;
         this.doctor = doctor;
@@ -42,12 +56,20 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public Date getCreatedOn() {
+        return createdOn;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
     public LocalDate getBookingDate() {

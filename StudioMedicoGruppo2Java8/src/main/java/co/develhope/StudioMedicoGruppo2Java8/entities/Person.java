@@ -2,6 +2,12 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.util.Date;
+
+import static jakarta.persistence.TemporalType.TIMESTAMP;
 
 @MappedSuperclass
 public class Person {
@@ -21,13 +27,22 @@ public class Person {
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
 
-    public Person(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus) {
+    @CreatedDate
+    @Temporal(TIMESTAMP)
+    private Date createdOn;
+    @LastModifiedDate
+    @Temporal(TIMESTAMP)
+    private Date modifiedOn;
+
+    public Person(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Date createdOn, Date modifiedOn) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.recordStatus = recordStatus;
+        this.createdOn = createdOn;
+        this.modifiedOn = modifiedOn;
     }
 
     public Person() {
@@ -75,6 +90,22 @@ public class Person {
 
     public RecordStatus getRecordStatus() {
         return recordStatus;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getModifiedOn() {
+        return modifiedOn;
+    }
+
+    public void setModifiedOn(Date modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 
     public void setRecordStatus(RecordStatus recordStatus) {

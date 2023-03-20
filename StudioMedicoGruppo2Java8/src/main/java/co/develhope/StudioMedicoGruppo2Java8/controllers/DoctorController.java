@@ -2,15 +2,12 @@ package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
 import co.develhope.StudioMedicoGruppo2Java8.services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/doctor")

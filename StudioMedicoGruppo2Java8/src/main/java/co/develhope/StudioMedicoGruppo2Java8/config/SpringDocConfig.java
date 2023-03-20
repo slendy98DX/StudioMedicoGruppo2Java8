@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
         info =
         @Info(title = "Studio Medico Gruppo 2 Java 8", version = "1.0", description = "Progetto finale"),
         tags = {@Tag(name = "doctor-controller", description = "The doctor controller that contains all CRUD methods" +
-                "for the DoctorDTO class"),
+                " for the DoctorDTO class"),
                 @Tag(name = "patient-controller", description = "The patient controller that contains all CRUD methods" +
-                "for the PatientDTO class"),
+                " for the PatientDTO class"),
                 @Tag(name = "secretary-controller", description = "The secretary controller that contains all CRUD methods" +
-                        "for the SecretaryDTO class")}
+                        " for the SecretaryDTO class")}
         )
 @Configuration
 public class SpringDocConfig {
