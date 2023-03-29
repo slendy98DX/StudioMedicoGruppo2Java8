@@ -3,7 +3,6 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
 
-import java.util.Date;
 
 @Entity
 @Table(name = "patient")
@@ -15,8 +14,8 @@ public class Patient extends Person{
     @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    public Patient(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Date createdOn, Date modifiedOn, String taxIdCode, Doctor doctor) {
-        super(id, name, surname, email, phoneNumber, recordStatus, createdOn, modifiedOn);
+    public Patient(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String taxIdCode, Doctor doctor) {
+        super(id, name, surname, email, phoneNumber, recordStatus);
         this.taxIdCode = taxIdCode;
         this.doctor = doctor;
     }

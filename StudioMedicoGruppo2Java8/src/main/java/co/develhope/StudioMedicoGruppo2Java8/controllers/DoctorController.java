@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/doctor")
@@ -25,12 +26,22 @@ public class DoctorController {
         return doctorService.getDoctors();
     }
 
-    @GetMapping("/getBookingDate")
-    public List<Booking> getSingleBooking(@RequestParam LocalDate localDate, @RequestParam Long id){
-       return doctorService.getAllBookingByDate(localDate, id);
+    @GetMapping("/getSingleDoctor/{id}")
+    public Optional<Doctor> getSingleDoctor(@PathVariable Long id) throws Exception {
+        return doctorService.getSingleDoctor(id);
     }
-    @GetMapping("/getBookings")
-    public List<Booking> getBookings(@RequestParam Long id) {
-        return doctorService.getBookings(id);
+
+    @PutMapping("/updateSingleDoctor/{id}")
+    public Doctor editSingleDoctor(@PathVariable Long id,@RequestBody Doctor doctor) throws Exception {
+        return doctorService.editSingleDoctor(id,doctor);
+    }
+    @PutMapping("/deleteDoctor/{id}")
+    public void deleteDoctor(@PathVariable Long id) throws Exception {
+        doctorService.deleteSingleDoctor(id);
+    }
+
+    @GetMapping("/getBookingDate/{id}")
+    public List<Booking> getSingleBooking(@RequestParam LocalDate localDate, @PathVariable Long id){
+       return doctorService.getAllBookingByDate(localDate, id);
     }
 }

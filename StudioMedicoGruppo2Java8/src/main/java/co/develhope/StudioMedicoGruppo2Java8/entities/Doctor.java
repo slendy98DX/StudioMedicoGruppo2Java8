@@ -1,5 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.entities;
 
+import co.develhope.StudioMedicoGruppo2Java8.enums.DoctorSpecialization;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
 
@@ -9,14 +10,7 @@ import java.util.Date;
 @Table(name = "doctor")
 public class Doctor extends Person{
 
-    public enum DoctorSpecialization{
-        CARDIOLOGO,
-        ANDROLOGO,
-        PODOLOGO,
-        GINECOLOGO,
-        UROLOGO,
-        PEDIATRA
-    }
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "doctorSpecialization")
@@ -24,8 +18,8 @@ public class Doctor extends Person{
     private String placeOfWork;
     private Integer workingDays;
 
-    public Doctor(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Date createdOn, Date modifiedOn, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
-        super(id, name, surname, email, phoneNumber, recordStatus, createdOn, modifiedOn);
+    public Doctor(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
+        super(id, name, surname, email, phoneNumber, recordStatus);
         this.doctorSpecialization = doctorSpecialization;
         this.placeOfWork = placeOfWork;
         this.workingDays = workingDays;

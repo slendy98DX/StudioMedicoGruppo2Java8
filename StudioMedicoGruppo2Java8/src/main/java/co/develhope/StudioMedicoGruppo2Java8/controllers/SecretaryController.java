@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,29 +25,40 @@ public class SecretaryController {
     public List<Secretary> getAllSecretaries(){
         return secretaryService.getAllSecretaries();
     }
+
+    @GetMapping("/getSingleSecretary/{id}")
+    public Optional<Secretary> getSingleSecretary(@PathVariable Long id) throws Exception {
+        return secretaryService.getSingleSecretary(id);
+    }
+
+    @PutMapping("/updateSingleSecretary/{id}")
+    public Secretary editSingleSecretary(@PathVariable Long id,@RequestBody Secretary secretary) throws Exception {
+        return secretaryService.editSingleSecretary(id,secretary);
+    }
+    @PutMapping("/deleteSecretary/{id}")
+    public void deleteSecretary(@PathVariable Long id) throws Exception {
+        secretaryService.deleteSingleSecretary(id);
+    }
+
     @PostMapping("/create-booking")
     public Booking createBooking(@RequestBody Booking booking){
         return secretaryService.createBooking(booking);
     }
     @GetMapping("/getAllBookings")
     public List<Booking> getAllBookings() {
-        return secretaryService.getBookings();
+        return secretaryService.getAllBookings();
     }
-    @GetMapping("/getSingleBooking")
-    public Optional<Booking> getSingleBooking(@RequestParam Long id) throws Exception {
+    @GetMapping("/getSingleBooking/{id}")
+    public Optional<Booking> getSingleBooking(@PathVariable Long id) throws Exception {
         return secretaryService.getSingleBooking(id);
     }
-    @PutMapping("/updateSingleBooking")
-    public Booking updateSingleBooking(@RequestParam Long id) throws Exception {
-        return secretaryService.editSingleBooking(id);
+    @PutMapping("/updateSingleBooking/{id}")
+    public Booking updateSingleBooking(@PathVariable Long id,@RequestBody Booking booking) throws Exception {
+        return secretaryService.editSingleBooking(id,booking);
     }
     @DeleteMapping("/deleteBooking/{id}")
-    public void deleteBooking(@PathVariable Long id, Map<Object,Object> fields){
-        secretaryService.deleteSingleBooking(id, fields);
-    }
-    @DeleteMapping("/deleteAllBooking")
-    public void deleteAllBooking(){
-        secretaryService.deleteAllBooking();
+    public void deleteBooking(@PathVariable Long id) throws Exception {
+        secretaryService.deleteSingleBooking(id);
     }
 }
 
