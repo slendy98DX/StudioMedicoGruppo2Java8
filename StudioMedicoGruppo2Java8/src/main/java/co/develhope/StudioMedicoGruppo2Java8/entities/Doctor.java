@@ -4,11 +4,10 @@ import co.develhope.StudioMedicoGruppo2Java8.enums.DoctorSpecialization;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
 
-import java.util.Date;
 
 @Entity
 @Table(name = "doctor")
-public class Doctor extends Person{
+public class Doctor extends User {
 
 
 
@@ -18,8 +17,8 @@ public class Doctor extends Person{
     private String placeOfWork;
     private Integer workingDays;
 
-    public Doctor(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
-        super(id, name, surname, email, phoneNumber, recordStatus);
+    public Doctor(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
+        super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active, role);
         this.doctorSpecialization = doctorSpecialization;
         this.placeOfWork = placeOfWork;
         this.workingDays = workingDays;

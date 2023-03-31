@@ -6,14 +6,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "secretary")
-public class Secretary extends Person{
+public class Secretary extends User {
     private Integer workingDays;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    public Secretary(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, Integer workingDays, Doctor doctor) {
-        super(id, name, surname, email, phoneNumber, recordStatus);
+    public Secretary(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, Integer workingDays, Doctor doctor) {
+        super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active, role);
         this.workingDays = workingDays;
         this.doctor = doctor;
     }

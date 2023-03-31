@@ -7,7 +7,21 @@ spring:
     database: mysql
     show_sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username:
+    password:
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
 
 springdoc:
   swagger-ui:

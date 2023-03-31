@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "patient")
-public class Patient extends Person{
+public class Patient extends User {
 
     @Column(unique = true)
     private String taxIdCode;
@@ -14,8 +14,8 @@ public class Patient extends Person{
     @ManyToOne(fetch = FetchType.EAGER)
     private Doctor doctor;
 
-    public Patient(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String taxIdCode, Doctor doctor) {
-        super(id, name, surname, email, phoneNumber, recordStatus);
+    public Patient(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, String taxIdCode, Doctor doctor) {
+        super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active, role);
         this.taxIdCode = taxIdCode;
         this.doctor = doctor;
     }

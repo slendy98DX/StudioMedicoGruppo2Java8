@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 
 
 @MappedSuperclass
-public class Person extends Auditable<String>{
+public class User extends Auditable<String>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String username;
     private String name;
     private String surname;
 
@@ -22,17 +24,31 @@ public class Person extends Auditable<String>{
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
 
+    private String password;
 
-    public Person(Long id, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus) {
+    private String activationCode;
+
+    private Boolean active;
+
+    @ManyToOne
+    private Role role;
+
+
+    public User(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role) {
         this.id = id;
+        this.username = username;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.recordStatus = recordStatus;
+        this.password = password;
+        this.activationCode = activationCode;
+        this.active = active;
+        this.role = role;
     }
 
-    public Person() {
+    public User() {
     }
 
     public Long getId() {
@@ -81,5 +97,45 @@ public class Person extends Auditable<String>{
 
     public void setRecordStatus(RecordStatus recordStatus) {
         this.recordStatus = recordStatus;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
