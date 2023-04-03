@@ -2,27 +2,18 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.Date;
-
-import static jakarta.persistence.TemporalType.TIMESTAMP;
 
 @Entity
 @Table(name = "booking")
-public class Booking {
+@EntityListeners(AuditingEntityListener.class)
+public class Booking extends Auditable<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-    @CreatedDate
-    @Temporal(TIMESTAMP)
-    private Date createdOn;
-    @LastModifiedDate
-    @Temporal(TIMESTAMP)
-    private Date modifiedOn;
     private LocalDate bookingDate;
 
     @Enumerated(EnumType.STRING)
@@ -35,10 +26,8 @@ public class Booking {
     private Patient patient;
 
 
-    public Booking(Long bookingId, Date createdOn, Date modifiedOn, LocalDate bookingDate, RecordStatus recordStatus, Doctor doctor, Patient patient) {
+    public Booking(Long bookingId,LocalDate bookingDate, RecordStatus recordStatus, Doctor doctor, Patient patient) {
         this.bookingId = bookingId;
-        this.createdOn = createdOn;
-        this.modifiedOn = modifiedOn;
         this.bookingDate = bookingDate;
         this.recordStatus = recordStatus;
         this.doctor = doctor;
@@ -54,22 +43,6 @@ public class Booking {
 
     public void setBookingId(Long bookingId) {
         this.bookingId = bookingId;
-    }
-
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public Date getModifiedOn() {
-        return modifiedOn;
-    }
-
-    public void setModifiedOn(Date modifiedOn) {
-        this.modifiedOn = modifiedOn;
     }
 
     public LocalDate getBookingDate() {
