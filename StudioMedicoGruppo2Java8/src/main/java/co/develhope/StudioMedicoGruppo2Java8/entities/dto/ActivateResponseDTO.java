@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.entities.dto;
 
-public class ActivateResponseDto extends BaseResponse{
+public class ActivateResponseDTO extends BaseResponse{
 
     private String username;
 

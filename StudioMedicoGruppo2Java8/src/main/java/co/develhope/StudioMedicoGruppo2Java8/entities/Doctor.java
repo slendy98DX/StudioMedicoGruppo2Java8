@@ -9,19 +9,21 @@ import jakarta.persistence.*;
 @Table(name = "doctor")
 public class Doctor extends User {
 
-
-
     @Enumerated(EnumType.STRING)
     @Column(name = "doctorSpecialization")
     private DoctorSpecialization doctorSpecialization;
     private String placeOfWork;
     private Integer workingDays;
 
-    public Doctor(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays) {
+    @ManyToOne
+    private Secretary secretary;
+
+    public Doctor(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays, Secretary secretary) {
         super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active, role);
         this.doctorSpecialization = doctorSpecialization;
         this.placeOfWork = placeOfWork;
         this.workingDays = workingDays;
+        this.secretary = secretary;
     }
 
     public Doctor() {
@@ -49,5 +51,13 @@ public class Doctor extends User {
 
     public void setWorkingDays(Integer workingDays) {
         this.workingDays = workingDays;
+    }
+
+    public Secretary getSecretary() {
+        return secretary;
+    }
+
+    public void setSecretary(Secretary secretary) {
+        this.secretary = secretary;
     }
 }

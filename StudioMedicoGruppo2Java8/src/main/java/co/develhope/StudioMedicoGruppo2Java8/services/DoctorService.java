@@ -46,14 +46,14 @@ public class DoctorService {
         return doctorEntityToResponse();
     }
 
-    public ActivateResponseDto activate(ActivateRequestDto request) {
+    public ActivateResponseDTO activate(ActivateRequestDTO request) {
         Optional<Doctor> oDoctor = doctorRepository.findByEmail(request.getEmail());
         Doctor doctor = oDoctor.orElseThrow(UserNotFoundException::new);
         if(request.getActivationCode().equals(doctor.getActivationCode())) {
             doctor.setActive(true);
             doctor.setActivationCode(null);
             doctorRepository.save(doctor);
-            ActivateResponseDto response = new ActivateResponseDto();
+            ActivateResponseDTO response = new ActivateResponseDTO();
             response.setStatus(Status.OK);
             response.setUsername(doctor.getUsername());
             return response;
@@ -101,6 +101,9 @@ public class DoctorService {
 
     private Doctor doctorRequestToEntity(DoctorRequestDTO request){
         Doctor doctor = new Doctor();
+        doctor.setName(request.getName());
+        doctor.setSurname(request.getSurname());
+        doctor.setPhoneNumber(request.getPhoneNumber());
         doctor.setEmail(request.getEmail());
         doctor.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         doctor.setUsername(request.getUsername());
@@ -108,7 +111,12 @@ public class DoctorService {
         doctor.setPlaceOfWork(request.getPlaceOfWork());
         doctor.setDoctorSpecialization(request.getDoctorSpecialization());
         doctor.setWorkingDays(request.getWorkingDays());
+        doctor.setCreatedOn(doctor.getCreatedOn());
+        doctor.setModifiedOn(doctor.getModifiedOn());
+        doctor.setCreatedBy(doctor.getUsername());
+        doctor.setLastModifiedBy(doctor.getLastModifiedBy());
         doctor.setActive(false);
+        doctor.setRecordStatus(RecordStatus.ACTIVE);
         doctor.setRole(roleRepository.findByRoleName("ROLE_DOCTOR"));
         return doctor;
     }

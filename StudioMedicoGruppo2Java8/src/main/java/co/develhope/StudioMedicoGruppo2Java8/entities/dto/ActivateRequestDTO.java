@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.entities.dto;
 
-public class ActivateRequestDto {
+public class ActivateRequestDTO {
 
     private String email;
     private String activationCode;
