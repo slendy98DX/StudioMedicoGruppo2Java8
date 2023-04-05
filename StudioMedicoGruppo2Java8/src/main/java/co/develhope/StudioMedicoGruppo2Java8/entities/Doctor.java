@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "doctor")
-public class Doctor extends User {
+public class Doctor extends Person {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "doctorSpecialization")
@@ -18,8 +18,8 @@ public class Doctor extends User {
     @ManyToOne
     private Secretary secretary;
 
-    public Doctor(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays, Secretary secretary) {
-        super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active, role);
+    public Doctor(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, DoctorSpecialization doctorSpecialization, String placeOfWork, Integer workingDays, Secretary secretary) {
+        super(id, username, name, surname, email, phoneNumber, recordStatus, password, activationCode, active);
         this.doctorSpecialization = doctorSpecialization;
         this.placeOfWork = placeOfWork;
         this.workingDays = workingDays;

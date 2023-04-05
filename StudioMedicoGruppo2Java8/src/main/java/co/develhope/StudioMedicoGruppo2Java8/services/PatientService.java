@@ -1,7 +1,9 @@
 package co.develhope.StudioMedicoGruppo2Java8.services;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
+import co.develhope.StudioMedicoGruppo2Java8.entities.dto.DoctorResponseDTO;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
@@ -80,5 +82,10 @@ public class PatientService {
 
     public List<Booking> getAllActiveBooking(Long id,RecordStatus recordStatus) {
         return bookingRepository.findAllByPatientIdAndRecordStatus(id,recordStatus);
+    }
+
+    public PatientResponseDTO patientEntityToResponse(Patient patient){
+        PatientResponseDTO response = new PatientResponseDTO();
+        return response;
     }
 }

@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.entities.dto;
 
-public class UserRequestDTO {
+public class PersonRequestDTO {
 
     private String username;
     private String name;

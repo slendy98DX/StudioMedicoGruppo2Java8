@@ -1,7 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.services;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
-import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
@@ -9,7 +8,6 @@ import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.RoleRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
 import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
 import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
@@ -33,9 +31,6 @@ public class SecretaryService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private EmailSender emailSender;
@@ -96,26 +91,6 @@ public class SecretaryService {
         }
     }
 
-    public Booking createBooking(Booking booking) {
-        return bookingService.createBooking(booking);
-    }
-
-    public List<Booking> getAllBookings(){
-        return bookingService.getBookings();
-    }
-
-    public Optional<Booking> getSingleBooking(Long id)throws Exception{
-        return bookingService.getSingleBooking(id);
-    }
-
-    public Booking editSingleBooking(Long id,Booking booking)throws Exception{
-        return bookingService.editSingleBooking(id,booking);
-    }
-
-    public void deleteSingleBooking(Long id) throws Exception {
-        bookingService.deleteSingleBooking(id);
-    }
-
     private Secretary secretaryRequestToEntity(SecretaryRequestDTO request){
         Secretary secretary = new Secretary();
         secretary.setName(request.getName());
@@ -132,7 +107,6 @@ public class SecretaryService {
         secretary.setLastModifiedBy(secretary.getLastModifiedBy());
         secretary.setActive(false);
         secretary.setRecordStatus(RecordStatus.ACTIVE);
-        secretary.setRole(roleRepository.findByRoleName("ROLE_SECRETARY"));
         return secretary;
     }
 

@@ -9,7 +9,6 @@ import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeExc
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.RoleRepository;
 import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
 import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
 import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptPasswordEncoder;
@@ -35,8 +34,7 @@ public class DoctorService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
+
 
 
     public DoctorResponseDTO register(DoctorRequestDTO request) {
@@ -117,13 +115,18 @@ public class DoctorService {
         doctor.setLastModifiedBy(doctor.getLastModifiedBy());
         doctor.setActive(false);
         doctor.setRecordStatus(RecordStatus.ACTIVE);
-        doctor.setRole(roleRepository.findByRoleName("ROLE_DOCTOR"));
         return doctor;
     }
 
-    private DoctorResponseDTO doctorEntityToResponse(){
+    public DoctorResponseDTO doctorEntityToResponse(Doctor doctor){
         DoctorResponseDTO response = new DoctorResponseDTO();
-        response.setStatus(Status.OK);
+        response.setWorkingDays(doctor.getWorkingDays());
+        response.setPlaceOfWork(doctor.getPlaceOfWork());
+        response.setDoctorSpecialization(doctor.getDoctorSpecialization());
+        response.setEmail(doctor.getEmail());
+        response.setFirstName(doctor.getName());
+        response.setLastName(doctor.getSurname());
+        response.setPhoneNumber(doctor.getPhoneNumber());
         return response;
     }
 }

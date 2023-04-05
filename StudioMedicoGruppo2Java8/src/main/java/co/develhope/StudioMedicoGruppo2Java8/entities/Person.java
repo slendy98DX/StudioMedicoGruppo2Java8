@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 
 @MappedSuperclass
-public class User extends Auditable<String>{
+public class Person extends Auditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +30,8 @@ public class User extends Auditable<String>{
 
     private Boolean active;
 
-    @ManyToOne
-    private Role role;
 
-
-    public User(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active, Role role) {
+    public Person(Long id, String username, String name, String surname, String email, String phoneNumber, RecordStatus recordStatus, String password, String activationCode, Boolean active) {
         this.id = id;
         this.username = username;
         this.name = name;
@@ -45,10 +42,9 @@ public class User extends Auditable<String>{
         this.password = password;
         this.activationCode = activationCode;
         this.active = active;
-        this.role = role;
     }
 
-    public User() {
+    public Person() {
     }
 
     public Long getId() {
@@ -129,13 +125,5 @@ public class User extends Auditable<String>{
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

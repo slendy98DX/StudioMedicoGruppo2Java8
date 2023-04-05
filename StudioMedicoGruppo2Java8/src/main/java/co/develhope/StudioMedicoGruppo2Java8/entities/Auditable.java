@@ -3,6 +3,8 @@ package co.develhope.StudioMedicoGruppo2Java8.entities;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,34 +17,34 @@ import static jakarta.persistence.TemporalType.DATE;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class Auditable <U>{
+public class Auditable {
 
     @CreatedBy
-    private U createdBy;
+    private String createdBy;
 
     @LastModifiedBy
-    private U lastModifiedBy;
+    private String lastModifiedBy;
 
-    @CreatedDate
-    @Temporal(DATE)
+
+
+    @CreationTimestamp
     private Date createdOn;
-    @LastModifiedDate
-    @Temporal(DATE)
+    @UpdateTimestamp
     private Date modifiedOn;
 
-    public U getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(U createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public U getLastModifiedBy() {
+    public String getLastModifiedBy() {
         return lastModifiedBy;
     }
 
-    public void setLastModifiedBy(U lastModifiedBy) {
+    public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 

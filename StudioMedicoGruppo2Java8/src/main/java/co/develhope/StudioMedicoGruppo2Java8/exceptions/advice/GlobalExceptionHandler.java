@@ -2,6 +2,7 @@ package co.develhope.StudioMedicoGruppo2Java8.exceptions.advice;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BaseResponse;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidBookingDurationException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,19 @@ public class GlobalExceptionHandler {
             br.setErrorMessage(e.getMessage());
         } else {
             br.setErrorMessage("USER_NOT_FOUND");
+        }
+        return br;
+    }
+
+    @ExceptionHandler(InvalidBookingDurationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handleInvalidActivationCodeException(InvalidBookingDurationException e) {
+        BaseResponse br = new BaseResponse();
+        br.setStatus(Status.KO);
+        if(e.getMessage() != null) {
+            br.setErrorMessage(e.getMessage());
+        } else {
+            br.setErrorMessage("INVALID_BOOKING_DURATION");
         }
         return br;
     }

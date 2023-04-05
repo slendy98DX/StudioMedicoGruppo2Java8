@@ -5,16 +5,19 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "booking")
 @EntityListeners(AuditingEntityListener.class)
-public class Booking extends Auditable<String> {
+public class Booking extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
-    private LocalDate bookingDate;
+    private LocalDateTime bookingDate;
+
+    private Integer bookingDuration;
 
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
@@ -26,9 +29,10 @@ public class Booking extends Auditable<String> {
     private Patient patient;
 
 
-    public Booking(Long bookingId,LocalDate bookingDate, RecordStatus recordStatus, Doctor doctor, Patient patient) {
+    public Booking(Long bookingId, LocalDateTime bookingDate, Integer bookingDuration, RecordStatus recordStatus, Doctor doctor, Patient patient) {
         this.bookingId = bookingId;
         this.bookingDate = bookingDate;
+        this.bookingDuration = bookingDuration;
         this.recordStatus = recordStatus;
         this.doctor = doctor;
         this.patient = patient;
@@ -45,11 +49,11 @@ public class Booking extends Auditable<String> {
         this.bookingId = bookingId;
     }
 
-    public LocalDate getBookingDate() {
+    public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(LocalDate bookingDate) {
+    public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
 
@@ -75,5 +79,13 @@ public class Booking extends Auditable<String> {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Integer getBookingDuration() {
+        return bookingDuration;
+    }
+
+    public void setBookingDuration(Integer bookingDuration) {
+        this.bookingDuration = bookingDuration;
     }
 }

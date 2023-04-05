@@ -1,6 +1,6 @@
 package co.develhope.StudioMedicoGruppo2Java8.entities.dto;
 
-public class SecretaryRequestDTO extends UserRequestDTO{
+public class SecretaryRequestDTO extends PersonRequestDTO {
 
     private Integer workingDays;
 
