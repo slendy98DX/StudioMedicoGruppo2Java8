@@ -37,20 +37,20 @@ public class DoctorController {
 
     @GetMapping("")
     @RoleSecurity("ROLE_SECRETARY")
-    public List<Doctor> getDoctors(){
+    public List<DoctorResponseDTO> getDoctors(){
         return doctorService.getDoctors();
     }
 
     @GetMapping("/getSingleDoctor/{id}")
     @RoleSecurity("ROLE_SECRETARY")
-    public Optional<Doctor> getSingleDoctor(@PathVariable Long id){
+    public Optional<DoctorResponseDTO> getSingleDoctor(@PathVariable Long id){
         return doctorService.getSingleDoctor(id);
     }
 
     @PutMapping("/updateSingleDoctor/{id}")
     @RoleSecurity("ROLE_SECRETARY")
-    public Doctor editSingleDoctor(@PathVariable Long id,@RequestBody Doctor doctor){
-        return doctorService.editSingleDoctor(id,doctor);
+    public DoctorResponseDTO editSingleDoctor(@PathVariable Long id,@RequestBody DoctorRequestDTO request){
+        return doctorService.editSingleDoctor(id,request);
     }
     @PutMapping("/deleteDoctor/{id}")
     @RoleSecurity("ROLE_SECRETARY")
@@ -58,9 +58,4 @@ public class DoctorController {
         doctorService.deleteSingleDoctor(id);
     }
 
-    @GetMapping("/getBookingDate/{id}")
-    @RoleSecurity("ROLE_DOCTOR")
-    public List<Booking> getBookingsByDate(@RequestParam LocalDate localDate, @PathVariable Long id){
-       return doctorService.getAllBookingByDate(localDate, id);
-    }
 }

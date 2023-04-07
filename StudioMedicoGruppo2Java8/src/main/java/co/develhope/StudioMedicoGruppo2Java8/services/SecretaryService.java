@@ -40,7 +40,7 @@ public class SecretaryService {
         Secretary secretary = secretaryRequestToEntity(request);
         secretaryRepository.save(secretary);
         emailSender.sendRegistrationEmailSecretary(secretary);
-        return secretaryEntityToResponse();
+        return secretaryEntityToResponse(secretary);
     }
 
     public ActivateResponseDTO activate(ActivateRequestDTO request) {
@@ -110,9 +110,13 @@ public class SecretaryService {
         return secretary;
     }
 
-    private SecretaryResponseDTO secretaryEntityToResponse(){
+    private SecretaryResponseDTO secretaryEntityToResponse(Secretary secretary){
         SecretaryResponseDTO response = new SecretaryResponseDTO();
-        response.setStatus(Status.OK);
+        response.setWorkingDays(secretary.getWorkingDays());
+        response.setEmail(secretary.getEmail());
+        response.setFirstName(secretary.getName());
+        response.setLastName(secretary.getSurname());
+        response.setPhoneNumber(secretary.getPhoneNumber());
         return response;
     }
 }

@@ -2,6 +2,7 @@ package co.develhope.StudioMedicoGruppo2Java8.exceptions.advice;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BaseResponse;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.BookingNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidBookingDurationException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public BaseResponse handleUserNotFoundException(UserNotFoundException e) {
         BaseResponse br = new BaseResponse();
         br.setStatus(Status.KO);
@@ -41,13 +42,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidBookingDurationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse handleInvalidActivationCodeException(InvalidBookingDurationException e) {
+    public BaseResponse handleInvalidBookingDurationException(InvalidBookingDurationException e) {
         BaseResponse br = new BaseResponse();
         br.setStatus(Status.KO);
         if(e.getMessage() != null) {
             br.setErrorMessage(e.getMessage());
         } else {
             br.setErrorMessage("INVALID_BOOKING_DURATION");
+        }
+        return br;
+    }
+    @ExceptionHandler(BookingNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public BaseResponse handleBookingNotFoundException(BookingNotFoundException e) {
+        BaseResponse br = new BaseResponse();
+        br.setStatus(Status.KO);
+        if(e.getMessage() != null) {
+            br.setErrorMessage(e.getMessage());
+        } else {
+            br.setErrorMessage("BOOKING_NOT_FOUND");
         }
         return br;
     }

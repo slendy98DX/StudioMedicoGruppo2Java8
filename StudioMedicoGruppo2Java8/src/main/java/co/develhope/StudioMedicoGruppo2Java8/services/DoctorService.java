@@ -15,7 +15,8 @@ import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptP
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +30,6 @@ public class DoctorService {
     private DoctorRepository doctorRepository;
 
     @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
@@ -41,7 +39,7 @@ public class DoctorService {
         Doctor doctor = doctorRequestToEntity(request);
         doctorRepository.save(doctor);
         emailSender.sendRegistrationEmailDoctor(doctor);
-        return doctorEntityToResponse();
+        return doctorEntityToResponse(doctor);
     }
 
     public ActivateResponseDTO activate(ActivateRequestDTO request) {
@@ -60,22 +58,25 @@ public class DoctorService {
         }
     }
 
-    public List<Doctor> getDoctors(){
-        return doctorRepository.findAll();
+    public List<DoctorResponseDTO> getDoctors(){
+        return doctorEntitiesToResponses(doctorRepository.findAll());
     }
 
-    public Optional<Doctor> getSingleDoctor(Long id){
+
+    public Optional<DoctorResponseDTO> getSingleDoctor(Long id){
         if(doctorRepository.existsById(id)){
-            return doctorRepository.findById(id);
+            Optional<Doctor> doctor = doctorRepository.findById(id);
+            return Optional.of(doctorEntityToResponse(doctor.get()));
         }else {
             throw new UserNotFoundException("Doctor not found");
         }
     }
 
-    public Doctor editSingleDoctor(Long id,Doctor doctor){
+    public DoctorResponseDTO editSingleDoctor(Long id,DoctorRequestDTO request){
         if(doctorRepository.existsById(id)){
-            doctor.setId(id);
-            return doctorRepository.save(doctor);
+            Optional<Doctor> doctor = doctorRepository.findById(id);
+            doctorRepository.save(doctorRequestToEntity(request));
+            return doctorEntityToResponse(doctor.get());
         }else {
             throw new UserNotFoundException("Doctor not found");
         }
@@ -87,14 +88,11 @@ public class DoctorService {
             doctor.get().setId(id);
             doctor.get().setRecordStatus(RecordStatus.DELETED);
             doctorRepository.save(doctor.get());
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setStatus(Status.OK);
         } else {
             throw new UserNotFoundException("Doctor not found");
         }
-    }
-
-
-    public List<Booking> getAllBookingByDate(LocalDate localDate, Long id) {
-        return bookingRepository.findAllByBookingDateAndDoctorId(localDate, id);
     }
 
     private Doctor doctorRequestToEntity(DoctorRequestDTO request){
@@ -109,6 +107,7 @@ public class DoctorService {
         doctor.setPlaceOfWork(request.getPlaceOfWork());
         doctor.setDoctorSpecialization(request.getDoctorSpecialization());
         doctor.setWorkingDays(request.getWorkingDays());
+        doctor.setSecretary(request.getSecretary());
         doctor.setCreatedOn(doctor.getCreatedOn());
         doctor.setModifiedOn(doctor.getModifiedOn());
         doctor.setCreatedBy(doctor.getUsername());
@@ -127,6 +126,14 @@ public class DoctorService {
         response.setFirstName(doctor.getName());
         response.setLastName(doctor.getSurname());
         response.setPhoneNumber(doctor.getPhoneNumber());
+        return response;
+    }
+
+    private List<DoctorResponseDTO> doctorEntitiesToResponses(List<Doctor> doctors) {
+        List<DoctorResponseDTO> response = new ArrayList<>();
+        for(Doctor doctor : doctors) {
+            response.add(doctorEntityToResponse(doctor));
+        }
         return response;
     }
 }

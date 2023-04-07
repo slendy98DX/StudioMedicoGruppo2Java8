@@ -23,6 +23,8 @@ public class SecretaryController {
     private SecretaryService secretaryService;
 
 
+
+
     @PostMapping("")
     @ZeroSecurity
     public SecretaryResponseDTO createSecretary(@RequestBody SecretaryRequestDTO request){
@@ -57,30 +59,6 @@ public class SecretaryController {
         secretaryService.deleteSingleSecretary(id);
     }
 
-    @PostMapping("/create-booking")
-    @RoleSecurity("ROLE_SECRETARY")
-    public Booking createBooking(@RequestBody Booking booking){
-        return secretaryService.createBooking(booking);
-    }
-    @GetMapping("/getAllBookings")
-    @RoleSecurity("ROLE_SECRETARY")
-    public List<Booking> getAllBookings() {
-        return secretaryService.getAllBookings();
-    }
-    @GetMapping("/getSingleBooking/{id}")
-    @RoleSecurity("ROLE_SECRETARY")
-    public Optional<Booking> getSingleBooking(@PathVariable Long id) throws Exception {
-        return secretaryService.getSingleBooking(id);
-    }
-    @PutMapping("/updateSingleBooking/{id}")
-    @RoleSecurity("ROLE_SECRETARY")
-    public Booking updateSingleBooking(@PathVariable Long id,@RequestBody Booking booking) throws Exception {
-        return secretaryService.editSingleBooking(id,booking);
-    }
-    @DeleteMapping("/deleteBooking/{id}")
-    @RoleSecurity("ROLE_SECRETARY")
-    public void deleteBooking(@PathVariable Long id) throws Exception {
-        secretaryService.deleteSingleBooking(id);
-    }
+
 }
 

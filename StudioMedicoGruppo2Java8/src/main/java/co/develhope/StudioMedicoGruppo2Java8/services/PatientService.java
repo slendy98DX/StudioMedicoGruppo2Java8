@@ -1,15 +1,20 @@
 package co.develhope.StudioMedicoGruppo2Java8.services;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
-import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
+
+import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
-import co.develhope.StudioMedicoGruppo2Java8.entities.dto.DoctorResponseDTO;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
+import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
+import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
+import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
+import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,74 +23,108 @@ public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private BookingService bookingService;
+    private EmailSender emailSender;
 
 
-    public Patient createPatient(Patient patient){
-        patient.setId(null);
-        patient.setRecordStatus(RecordStatus.ACTIVE);
-        Patient patientSaved = patientRepository.save(patient);
-        return patientSaved;
-    }
-    
-    public List<Patient> getPatients(){
-        return patientRepository.findAll();
+    public PatientResponseDTO register(PatientRequestDTO request) {
+        Patient patient = patientRequestToEntity(request);
+        patientRepository.save(patient);
+        emailSender.sendRegistrationEmailPatient(patient);
+        return patientEntityToResponse(patient);
     }
 
-    public Optional<Patient> getSinglePatient(Long id)throws Exception{
-        if(patientRepository.existsById(id)){
-            return patientRepository.findById(id);
-        }else {
-            throw new Exception("Patient not found");
+    public ActivateResponseDTO activate(ActivateRequestDTO request) {
+        Optional<Patient> opatient = patientRepository.findByEmail(request.getEmail());
+        Patient patient = opatient.orElseThrow(UserNotFoundException::new);
+        if(request.getActivationCode().equals(patient.getActivationCode())) {
+            patient.setActive(true);
+            patient.setActivationCode(null);
+            patientRepository.save(patient);
+            ActivateResponseDTO response = new ActivateResponseDTO();
+            response.setStatus(Status.OK);
+            response.setUsername(patient.getUsername());
+            return response;
+        } else {
+            throw new InvalidActivationCodeException();
         }
     }
 
-    public Patient editSinglePatient(Long id, Patient patient)throws Exception{
+    public List<PatientResponseDTO> getPatient(){
+        return patientEntitiesToResponses(patientRepository.findAll());
+    }
+
+
+    public Optional<PatientResponseDTO> getSinglePatient(Long id){
         if(patientRepository.existsById(id)){
-            patient.setId(id);
-            return patientRepository.save(patient);
+            Optional<Patient> patient = patientRepository.findById(id);
+            return Optional.of(patientEntityToResponse(patient.get()));
         }else {
-            throw new Exception("Patient not found");
+            throw new UserNotFoundException("patient not found");
         }
     }
 
-    public void deleteSinglePatient(Long id) throws Exception {
+    public PatientResponseDTO editSinglePatient(Long id,PatientRequestDTO request){
+        if(patientRepository.existsById(id)){
+            Optional<Patient> patient = patientRepository.findById(id);
+            patientRepository.save(patientRequestToEntity(request));
+            return patientEntityToResponse(patient.get());
+        }else {
+            throw new UserNotFoundException("patient not found");
+        }
+    }
+
+    public void deleteSinglePatient(Long id){
         Optional<Patient> patient = patientRepository.findById(id);
         if(patient.isPresent()){
             patient.get().setId(id);
             patient.get().setRecordStatus(RecordStatus.DELETED);
             patientRepository.save(patient.get());
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setStatus(Status.OK);
         } else {
-            throw new Exception("Patient not found");
+            throw new UserNotFoundException("patient not found");
         }
     }
 
-    public Booking createBooking(Booking booking) {
-        booking.setCreatedBy(booking.getPatient().getEmail());
-        return bookingRepository.save(booking);
-    }
-
-    public void deleteSingleBooking(Long patientId, Long bookingId) throws Exception {
-        Optional<Booking> booking = bookingRepository.findByPatientIdAndBookingId(patientId,bookingId);
-        if(booking.isPresent() && booking.get().getRecordStatus().equals(RecordStatus.ACTIVE)){
-            booking.get().setRecordStatus(RecordStatus.DELETED);
-            bookingRepository.save(booking.get());
-        } else {
-            throw new Exception("Booking not found");
-        }
-    }
-
-    public List<Booking> getAllActiveBooking(Long id,RecordStatus recordStatus) {
-        return bookingRepository.findAllByPatientIdAndRecordStatus(id,recordStatus);
+    private Patient patientRequestToEntity(PatientRequestDTO request){
+        Patient patient = new Patient();
+        patient.setName(request.getName());
+        patient.setSurname(request.getSurname());
+        patient.setPhoneNumber(request.getPhoneNumber());
+        patient.setEmail(request.getEmail());
+        patient.setTaxIdCode(request.getTaxIdCode());
+        patient.setDoctor(request.getDoctor());
+        patient.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        patient.setUsername(request.getUsername());
+        patient.setActivationCode(StringUtility.generateRandomString(6));
+        patient.setCreatedOn(patient.getCreatedOn());
+        patient.setModifiedOn(patient.getModifiedOn());
+        patient.setCreatedBy(patient.getUsername());
+        patient.setLastModifiedBy(patient.getLastModifiedBy());
+        patient.setActive(false);
+        patient.setRecordStatus(RecordStatus.ACTIVE);
+        return patient;
     }
 
     public PatientResponseDTO patientEntityToResponse(Patient patient){
         PatientResponseDTO response = new PatientResponseDTO();
+        response.setTaxIdCode(patient.getTaxIdCode());
+        response.setEmail(patient.getEmail());
+        response.setFirstName(patient.getName());
+        response.setLastName(patient.getSurname());
+        response.setPhoneNumber(patient.getPhoneNumber());
+        return response;
+    }
+
+    private List<PatientResponseDTO> patientEntitiesToResponses(List<Patient> patients) {
+        List<PatientResponseDTO> response = new ArrayList<>();
+        for(Patient patient : patients) {
+            response.add(patientEntityToResponse(patient));
+        }
         return response;
     }
 }

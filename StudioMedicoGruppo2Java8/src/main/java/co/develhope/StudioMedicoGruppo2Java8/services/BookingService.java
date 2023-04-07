@@ -1,15 +1,18 @@
 package co.develhope.StudioMedicoGruppo2Java8.services;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
+import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BaseResponse;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BookingRequestDTO;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BookingResponseDTO;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.BookingNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidBookingDurationException;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,37 +50,56 @@ public class BookingService {
 
     public List<BookingResponseDTO> getBookings(){
         return bookingEntitiesToResponses(bookingRepository.findAll());
-
     }
 
 
 
-    public Optional<Booking> getSingleBooking(Long id)throws Exception{
+    public Optional<BookingResponseDTO> getSingleBooking(Long id){
         if(bookingRepository.existsById(id)){
-            return bookingRepository.findById(id);
+            Optional<Booking> booking = bookingRepository.findById(id);
+            return Optional.of(bookingEntityToResponse(booking.get()));
         }else {
-            throw new Exception("Booking not found");
+            throw new BookingNotFoundException("Booking not found");
         }
     }
 
-    public Booking editSingleBooking(Long id,Booking booking)throws Exception{
+    public BookingResponseDTO editSingleBooking(Long id,BookingRequestDTO request){
         if(bookingRepository.existsById(id)){
-            booking.setBookingId(id);
-            return bookingRepository.save(booking);
+            Optional<Booking> booking = bookingRepository.findById(id);
+            bookingRepository.save(bookingRequestToEntity(request));
+            return bookingEntityToResponse(booking.get());
         }else {
-            throw new Exception("Booking not found");
+            throw new BookingNotFoundException("Booking not found");
         }
     }
 
-    public void deleteSingleBooking(Long id) throws Exception {
+    public void deleteSingleBooking(Long id){
         Optional<Booking> booking = bookingRepository.findById(id);
         if(booking.isPresent()){
             booking.get().setBookingId(id);
             booking.get().setRecordStatus(RecordStatus.DELETED);
             bookingRepository.save(booking.get());
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setStatus(Status.OK);
         } else {
-            throw new Exception("Booking not found");
+            throw new BookingNotFoundException("Booking not found");
         }
+    }
+    public void deleteSingleBooking(Long patientId, Long bookingId){
+        Optional<Booking> booking = bookingRepository.findByPatientIdAndBookingId(patientId,bookingId);
+        if(booking.isPresent() && booking.get().getRecordStatus().equals(RecordStatus.ACTIVE)){
+            booking.get().setRecordStatus(RecordStatus.DELETED);
+            bookingRepository.save(booking.get());
+        } else {
+            throw new BookingNotFoundException("Booking not found");
+        }
+    }
+    public List<BookingResponseDTO> getAllBookingByDate(LocalDate localDate, Long id) {
+        return bookingRepository.findAllByBookingDateAndDoctorId(localDate, id);
+    }
+
+    public List<BookingResponseDTO> getAllActiveBooking(Long id,RecordStatus recordStatus) {
+        return bookingRepository.findAllByPatientIdAndRecordStatus(id,recordStatus);
     }
 
     private Booking bookingRequestToEntity(BookingRequestDTO request){
