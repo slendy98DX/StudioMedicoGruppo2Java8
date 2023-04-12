@@ -1,14 +1,10 @@
 package co.develhope.StudioMedicoGruppo2Java8.controllers;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
-import co.develhope.StudioMedicoGruppo2Java8.entities.dto.ActivateRequestDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.dto.ActivateResponseDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.dto.SecretaryRequestDTO;
-import co.develhope.StudioMedicoGruppo2Java8.entities.dto.SecretaryResponseDTO;
+import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.services.SecretaryService;
+import it.pasqualecavallo.studentsmaterial.authorization_framework.security.PublicEndpoint;
 import it.pasqualecavallo.studentsmaterial.authorization_framework.security.RoleSecurity;
-import it.pasqualecavallo.studentsmaterial.authorization_framework.security.ZeroSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,38 +18,35 @@ public class SecretaryController {
     @Autowired
     private SecretaryService secretaryService;
 
-
-
-
-    @PostMapping("")
-    @ZeroSecurity
+    @PostMapping("/register")
+    @PublicEndpoint
     public SecretaryResponseDTO createSecretary(@RequestBody SecretaryRequestDTO request){
         return secretaryService.createSecretary(request);
     }
 
     @PostMapping("/activate")
-    @RoleSecurity("ROLE_SECRETARY")
+    @PublicEndpoint
     public ActivateResponseDTO activate(@RequestBody ActivateRequestDTO request) {
         return secretaryService.activate(request);
     }
-    @GetMapping("")
+    @GetMapping("/get-all-secretaries")
     @RoleSecurity("ROLE_SECRETARY")
-    public List<Secretary> getAllSecretaries(){
+    public List<SecretaryResponseDTO> getAllSecretaries(){
         return secretaryService.getAllSecretaries();
     }
 
-    @GetMapping("/getSingleSecretary/{id}")
+    @GetMapping("/get-single-secretary/{id}")
     @RoleSecurity("ROLE_SECRETARY")
-    public Optional<Secretary> getSingleSecretary(@PathVariable Long id) throws Exception {
+    public Optional<SecretaryResponseDTO> getSingleSecretary(@PathVariable Long id){
         return secretaryService.getSingleSecretary(id);
     }
 
-    @PutMapping("/updateSingleSecretary/{id}")
+    @PutMapping("/update-single-secretary/{id}")
     @RoleSecurity("ROLE_SECRETARY")
-    public Secretary editSingleSecretary(@PathVariable Long id,@RequestBody Secretary secretary){
-        return secretaryService.editSingleSecretary(id,secretary);
+    public SecretaryResponseDTO editSingleSecretary(@PathVariable Long id,@RequestBody SecretaryRequestDTO request){
+        return secretaryService.editSingleSecretary(id,request);
     }
-    @PutMapping("/deleteSecretary/{id}")
+    @PutMapping("/delete-secretary/{id}")
     @RoleSecurity("ROLE_SECRETARY")
     public void deleteSecretary(@PathVariable Long id){
         secretaryService.deleteSingleSecretary(id);

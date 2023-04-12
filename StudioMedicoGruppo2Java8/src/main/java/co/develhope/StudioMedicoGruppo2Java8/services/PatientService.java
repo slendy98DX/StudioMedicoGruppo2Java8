@@ -5,9 +5,12 @@ import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.EmailAlreadyUsedException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
 import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
 import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
 import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptPasswordEncoder;
@@ -22,6 +25,12 @@ import java.util.Optional;
 public class PatientService {
 
     @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private SecretaryRepository secretaryRepository;
+
+    @Autowired
     private PatientRepository patientRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -31,10 +40,14 @@ public class PatientService {
 
 
     public PatientResponseDTO register(PatientRequestDTO request) {
-        Patient patient = patientRequestToEntity(request);
-        patientRepository.save(patient);
-        emailSender.sendRegistrationEmailPatient(patient);
-        return patientEntityToResponse(patient);
+        if(doctorRepository.findByEmail(request.getEmail()).isPresent() || secretaryRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyUsedException("EMAIL_ALREADY_USED");
+        } else {
+            Patient patient = patientRequestToEntity(request);
+            patientRepository.save(patient);
+            emailSender.sendRegistrationEmailPatient(patient);
+            return patientEntityToResponse(patient);
+        }
     }
 
     public ActivateResponseDTO activate(ActivateRequestDTO request) {

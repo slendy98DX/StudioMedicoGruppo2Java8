@@ -2,13 +2,17 @@ package co.develhope.StudioMedicoGruppo2Java8.services;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
+import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.EmailAlreadyUsedException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
 import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
 import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
 import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptPasswordEncoder;
@@ -24,6 +28,12 @@ import java.util.Optional;
 public class DoctorService {
 
     @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private SecretaryRepository secretaryRepository;
+
+    @Autowired
     private EmailSender emailSender;
 
     @Autowired
@@ -36,10 +46,14 @@ public class DoctorService {
 
 
     public DoctorResponseDTO register(DoctorRequestDTO request) {
-        Doctor doctor = doctorRequestToEntity(request);
-        doctorRepository.save(doctor);
-        emailSender.sendRegistrationEmailDoctor(doctor);
-        return doctorEntityToResponse(doctor);
+        if(patientRepository.findByEmail(request.getEmail()).isPresent() || secretaryRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyUsedException("EMAIL_ALREADY_USED");
+        } else {
+            Doctor doctor = doctorRequestToEntity(request);
+            doctorRepository.save(doctor);
+            emailSender.sendRegistrationEmailDoctor(doctor);
+            return doctorEntityToResponse(doctor);
+        }
     }
 
     public ActivateResponseDTO activate(ActivateRequestDTO request) {

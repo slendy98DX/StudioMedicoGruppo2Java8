@@ -2,10 +2,7 @@ package co.develhope.StudioMedicoGruppo2Java8.exceptions.advice;
 
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.BaseResponse;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
-import co.develhope.StudioMedicoGruppo2Java8.exceptions.BookingNotFoundException;
-import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidBookingDurationException;
-import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
-import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -61,6 +58,32 @@ public class GlobalExceptionHandler {
             br.setErrorMessage(e.getMessage());
         } else {
             br.setErrorMessage("BOOKING_NOT_FOUND");
+        }
+        return br;
+    }
+
+    @ExceptionHandler(InvalidBookingDateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponse handleInvalidBookingDateException(InvalidBookingDateException e) {
+        BaseResponse br = new BaseResponse();
+        br.setStatus(Status.KO);
+        if(e.getMessage() != null) {
+            br.setErrorMessage(e.getMessage());
+        } else {
+            br.setErrorMessage("INVALID_BOOKING_DATE");
+        }
+        return br;
+    }
+
+    @ExceptionHandler(EmailAlreadyUsedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public BaseResponse handleInvalidBookingDateException(EmailAlreadyUsedException e) {
+        BaseResponse br = new BaseResponse();
+        br.setStatus(Status.KO);
+        if(e.getMessage() != null) {
+            br.setErrorMessage(e.getMessage());
+        } else {
+            br.setErrorMessage("EMAIL_ALREADY_USED");
         }
         return br;
     }

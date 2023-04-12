@@ -30,3 +30,9 @@ springdoc:
       name: 'name'
       url: '/v3/api-docs'
 
+authframework:
+  jwt:
+    hskey: KTlgvPcXbnLoYl6b5Ma1oG294dGoZ+fyxBqJiBjQjVo=
+    audience: testaudience
+    token-ttl: 86400000
+

@@ -6,6 +6,8 @@ public class BookingResponseDTO {
 
     private LocalDateTime bookingDate;
 
+    private Integer bookingDuration;
+
     private PatientResponseDTO patient;
 
     private DoctorResponseDTO doctor;
@@ -32,5 +34,13 @@ public class BookingResponseDTO {
 
     public void setDoctor(DoctorResponseDTO doctor) {
         this.doctor = doctor;
+    }
+
+    public Integer getBookingDuration() {
+        return bookingDuration;
+    }
+
+    public void setBookingDuration(Integer bookingDuration) {
+        this.bookingDuration = bookingDuration;
     }
 }

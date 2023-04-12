@@ -19,6 +19,6 @@ public class AuthorizationConfig {
      */
     @Bean
     public ExclusionPatterEvaluator exclusionPatterEvaluator() {
-        return new ExclusionPatterEvaluator().mustExcludeAntPathMatchers("/swagger-ui", "/swagger-ui/**", "/v3", "/v3/**");
+        return new ExclusionPatterEvaluator().mustExcludeAntPathMatchers("/swagger-ui", "/swagger-ui/**", "/v3", "/v3/**", "/login", "/login/**");
     }
 }

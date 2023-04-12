@@ -3,9 +3,7 @@ package co.develhope.StudioMedicoGruppo2Java8.entities.dto;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Doctor;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Patient;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class BookingRequestDTO {
 
@@ -14,6 +12,8 @@ public class BookingRequestDTO {
     private Patient patient;
 
     private Doctor doctor;
+
+    private Integer bookingDuration;
 
 
     public LocalDateTime getBookingDate() {
@@ -38,5 +38,13 @@ public class BookingRequestDTO {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public Integer getBookingDuration() {
+        return bookingDuration;
+    }
+
+    public void setBookingDuration(Integer bookingDuration) {
+        this.bookingDuration = bookingDuration;
     }
 }

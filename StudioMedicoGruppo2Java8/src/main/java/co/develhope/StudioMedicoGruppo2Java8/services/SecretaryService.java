@@ -1,13 +1,14 @@
 package co.develhope.StudioMedicoGruppo2Java8.services;
 
-import co.develhope.StudioMedicoGruppo2Java8.entities.Booking;
 import co.develhope.StudioMedicoGruppo2Java8.entities.Secretary;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.*;
 import co.develhope.StudioMedicoGruppo2Java8.enums.RecordStatus;
 import co.develhope.StudioMedicoGruppo2Java8.enums.Status;
+import co.develhope.StudioMedicoGruppo2Java8.exceptions.EmailAlreadyUsedException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.InvalidActivationCodeException;
 import co.develhope.StudioMedicoGruppo2Java8.exceptions.UserNotFoundException;
-import co.develhope.StudioMedicoGruppo2Java8.repositories.BookingRepository;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.DoctorRepository;
+import co.develhope.StudioMedicoGruppo2Java8.repositories.PatientRepository;
 import co.develhope.StudioMedicoGruppo2Java8.repositories.SecretaryRepository;
 import co.develhope.StudioMedicoGruppo2Java8.utility.EmailSender;
 import co.develhope.StudioMedicoGruppo2Java8.utility.StringUtility;
@@ -15,6 +16,7 @@ import it.pasqualecavallo.studentsmaterial.authorization_framework.utils.BCryptP
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +27,10 @@ public class SecretaryService {
     private SecretaryRepository secretaryRepository;
 
     @Autowired
-    private BookingRepository bookingRepository;
+    private DoctorRepository doctorRepository;
+
     @Autowired
-    private BookingService bookingService;
+    private PatientRepository patientRepository;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -37,16 +40,20 @@ public class SecretaryService {
 
 
     public SecretaryResponseDTO createSecretary(SecretaryRequestDTO request) {
-        Secretary secretary = secretaryRequestToEntity(request);
-        secretaryRepository.save(secretary);
-        emailSender.sendRegistrationEmailSecretary(secretary);
-        return secretaryEntityToResponse(secretary);
+        if(patientRepository.findByEmail(request.getEmail()).isPresent() || doctorRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyUsedException("EMAIL_ALREADY_USED");
+        } else {
+            Secretary secretary = secretaryRequestToEntity(request);
+            secretaryRepository.save(secretary);
+            emailSender.sendRegistrationEmailSecretary(secretary);
+            return secretaryEntityToResponse(secretary);
+        }
     }
 
     public ActivateResponseDTO activate(ActivateRequestDTO request) {
         Optional<Secretary> oSecretary = secretaryRepository.findByEmail(request.getEmail());
         Secretary secretary = oSecretary.orElseThrow(UserNotFoundException::new);
-        if(request.getActivationCode().equals(secretary.getActivationCode())) {
+        if (request.getActivationCode().equals(secretary.getActivationCode())) {
             secretary.setActive(true);
             secretary.setActivationCode(null);
             secretaryRepository.save(secretary);
@@ -59,39 +66,43 @@ public class SecretaryService {
         }
     }
 
-    public List<Secretary> getAllSecretaries() {
-        return secretaryRepository.findAll();
+    public List<SecretaryResponseDTO> getAllSecretaries() {
+        return secretaryEntitiesToResponses(secretaryRepository.findAll());
     }
 
-    public Optional<Secretary> getSingleSecretary(Long id){
-        if(secretaryRepository.existsById(id)){
-            return secretaryRepository.findById(id);
-        }else {
-            throw new UserNotFoundException("Secretary not found");
-        }
-    }
-
-    public Secretary editSingleSecretary(Long id,Secretary secretary){
-        if(secretaryRepository.existsById(id)){
-            secretary.setId(id);
-            return secretaryRepository.save(secretary);
-        }else {
-            throw new UserNotFoundException("Secretary not found");
-        }
-    }
-
-    public void deleteSingleSecretary(Long id){
-        Optional<Secretary> secretary = secretaryRepository.findById(id);
-        if(secretary.isPresent()){
-            secretary.get().setId(id);
-            secretary.get().setRecordStatus(RecordStatus.DELETED);
-            secretaryRepository.save(secretary.get());
+    public Optional<SecretaryResponseDTO> getSingleSecretary(Long id) {
+        if (secretaryRepository.existsById(id)) {
+            Optional<Secretary> secretary = secretaryRepository.findById(id);
+            return Optional.of(secretaryEntityToResponse(secretary.get()));
         } else {
             throw new UserNotFoundException("Secretary not found");
         }
     }
 
-    private Secretary secretaryRequestToEntity(SecretaryRequestDTO request){
+    public SecretaryResponseDTO editSingleSecretary(Long id, SecretaryRequestDTO request) {
+        if (secretaryRepository.existsById(id)) {
+            Optional<Secretary> secretary = secretaryRepository.findById(id);
+            secretaryRepository.save(secretaryRequestToEntity(request));
+            return secretaryEntityToResponse(secretary.get());
+        } else {
+            throw new UserNotFoundException("Secretary not found");
+        }
+    }
+
+    public void deleteSingleSecretary(Long id) {
+        Optional<Secretary> secretary = secretaryRepository.findById(id);
+        if (secretary.isPresent()) {
+            secretary.get().setId(id);
+            secretary.get().setRecordStatus(RecordStatus.DELETED);
+            secretaryRepository.save(secretary.get());
+            BaseResponse baseResponse = new BaseResponse();
+            baseResponse.setStatus(Status.OK);
+        } else {
+            throw new UserNotFoundException("Secretary not found");
+        }
+    }
+
+    private Secretary secretaryRequestToEntity(SecretaryRequestDTO request) {
         Secretary secretary = new Secretary();
         secretary.setName(request.getName());
         secretary.setSurname(request.getSurname());
@@ -110,13 +121,21 @@ public class SecretaryService {
         return secretary;
     }
 
-    private SecretaryResponseDTO secretaryEntityToResponse(Secretary secretary){
+    private SecretaryResponseDTO secretaryEntityToResponse(Secretary secretary) {
         SecretaryResponseDTO response = new SecretaryResponseDTO();
         response.setWorkingDays(secretary.getWorkingDays());
         response.setEmail(secretary.getEmail());
         response.setFirstName(secretary.getName());
         response.setLastName(secretary.getSurname());
         response.setPhoneNumber(secretary.getPhoneNumber());
+        return response;
+    }
+
+    private List<SecretaryResponseDTO> secretaryEntitiesToResponses(List<Secretary> secretaries) {
+        List<SecretaryResponseDTO> response = new ArrayList<>();
+        for (Secretary secretary : secretaries) {
+            response.add(secretaryEntityToResponse(secretary));
+        }
         return response;
     }
 }

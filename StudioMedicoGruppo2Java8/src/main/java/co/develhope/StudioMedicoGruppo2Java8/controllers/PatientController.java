@@ -5,6 +5,7 @@ import co.develhope.StudioMedicoGruppo2Java8.entities.dto.ActivateResponseDTO;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.PatientRequestDTO;
 import co.develhope.StudioMedicoGruppo2Java8.entities.dto.PatientResponseDTO;
 import co.develhope.StudioMedicoGruppo2Java8.services.PatientService;
+import it.pasqualecavallo.studentsmaterial.authorization_framework.security.PublicEndpoint;
 import it.pasqualecavallo.studentsmaterial.authorization_framework.security.RoleSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,14 @@ public class PatientController {
     @Autowired
     PatientService patientService;
     
-    @PostMapping("/create-patient")
+    @PostMapping("/register")
+    @PublicEndpoint
     public PatientResponseDTO register(@RequestBody PatientRequestDTO request){
         return patientService.register(request);
     }
 
     @PostMapping("/activate")
-    @RoleSecurity("ROLE_PATIENT")
+    @PublicEndpoint
     public ActivateResponseDTO activate(@RequestBody ActivateRequestDTO request) {
         return patientService.activate(request);
     }
